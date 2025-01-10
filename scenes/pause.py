@@ -1,19 +1,23 @@
-import pyray
-from raylib import colors
+from scenes.base import SceneBase
+from settings import BLACK_BACKGROUND, WHITE_TEXT, FONT_SIZE, SCREEN_WIDTH, SCREEN_HEIGHT, font
+import raylib as rl
+class PauseScene(SceneBase):
+    """
+    Класс для сцены паузы.
 
-from objects.text import Text
-from scenes.base import BaseScene
-from settings import Settings
+    Методы:
+        enter(): Входит в сцену паузы.
+        draw(): Рисует сцену паузы.
+    """
+    def enter(self):
+        """
+       Входит в сцену паузы.
+        """
+        print("Entering Pause Scene")
 
-
-class PauseScene(BaseScene):
-    def __init__(self):
-        self.hello_text = Text(Settings.WIDTH // 2, Settings.HEIGHT // 2, "Pause", 32, colors.YELLOW)
-        super().__init__()
-
-    def set_up_objects(self):
-        self.objects.append(self.hello_text)
-
-    def additional_process_event(self):
-        if pyray.is_key_pressed(pyray.KeyboardKey.KEY_P):
-            Settings.set_scene(0)
+    def draw(self):
+        """
+       Рисует сцену паузы.
+        """
+        rl.ClearBackground(BLACK_BACKGROUND)
+        rl.DrawTextEx(font, "Pause Scene".encode(), (SCREEN_WIDTH // 2 - 100, SCREEN_HEIGHT // 2), FONT_SIZE, 1.0, WHITE_TEXT)
