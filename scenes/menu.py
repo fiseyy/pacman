@@ -4,7 +4,7 @@ import pyray as pr
 from settings import BLACK_BACKGROUND, FONT_SIZE, SCREEN_WIDTH, SCREEN_HEIGHT,font, BUTTON_WIDTH, BUTTON_HEIGHT,RED_TEXT
 
 # Функция для рисования кнопки
-def draw_button(text: str, x: int, y: int, width: int, height: int, font_size: int, on_click=None, active_color=rl.DARKGRAY, inactive_color=rl.LIGHTGRAY) -> None:
+def draw_button(text: str, x: int, y: int, width: int, height: int, font_size: int, on_click=None, active_color=pr.DARKGRAY, inactive_color=pr.LIGHTGRAY) -> None:
     """
    Рисует кнопку на экране.
 
@@ -52,4 +52,4 @@ class MenuScene(SceneBase):
         pr.clear_background(BLACK_BACKGROUND)
         pr.draw_text_ex(font, "PAC-MAN".encode(), (SCREEN_WIDTH // 2 - 150, 100), 100, 1.0, RED_TEXT)
         draw_button("Play".encode(), SCREEN_WIDTH // 2 - 100, SCREEN_HEIGHT // 2 - 50, BUTTON_WIDTH, BUTTON_HEIGHT, FONT_SIZE, lambda: self.state.change_scene(GameScene()))
-        draw_button("Exit".encode(), SCREEN_WIDTH // 2 - 100, SCREEN_HEIGHT // 2, BUTTON_WIDTH, BUTTON_HEIGHT, FONT_SIZE, rl.CloseWindow)
+        draw_button("Exit".encode(), SCREEN_WIDTH // 2 - 100, SCREEN_HEIGHT // 2, BUTTON_WIDTH, BUTTON_HEIGHT, FONT_SIZE, pr.CloseWindow)
