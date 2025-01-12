@@ -52,4 +52,4 @@ class MenuScene(SceneBase):
         pr.clear_background(BLACK_BACKGROUND)
         pr.draw_text_ex(font, "PAC-MAN".encode(), (SCREEN_WIDTH // 2 - 150, 100), 100, 1.0, RED_TEXT)
         draw_button("Play".encode(), SCREEN_WIDTH // 2 - 100, SCREEN_HEIGHT // 2 - 50, BUTTON_WIDTH, BUTTON_HEIGHT, FONT_SIZE, lambda: self.state.change_scene(GameScene()))
-        draw_button("Exit".encode(), SCREEN_WIDTH // 2 - 100, SCREEN_HEIGHT // 2, BUTTON_WIDTH, BUTTON_HEIGHT, FONT_SIZE, pr.CloseWindow)
+        draw_button("Exit".encode(), SCREEN_WIDTH // 2 - 100, SCREEN_HEIGHT // 2, BUTTON_WIDTH, BUTTON_HEIGHT, FONT_SIZE, pr.close_window())
