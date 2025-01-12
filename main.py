@@ -1,13 +1,13 @@
-import raylib as rl
+import pyray as pr
 from settings import *
 from scenes.scene_manager import handle_key_presses, state
-rl.InitWindow(SCREEN_WIDTH, SCREEN_HEIGHT, "PAC-MAN Game".encode())  # Инициализация окна
-rl.SetTargetFPS(60)  # Установка целевого FPS
+pr.init_window(SCREEN_WIDTH, SCREEN_HEIGHT, "PAC-MAN Game".encode())  # Инициализация окна
+pr.set_target_fps(60)  # Установка целевого FPS
 
 # Основной цикл игры
-while not rl.WindowShouldClose():
-    rl.BeginDrawing()
+while not pr.WindowShouldClose():
+    pr.begin_drawing()
     handle_key_presses()
     state.current_scene.draw()
-    rl.EndDrawing()
-rl.CloseWindow()
+    pr.end_drawing()
+pr.CloseWindow()
