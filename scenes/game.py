@@ -20,4 +20,4 @@ class GameScene(SceneBase):
        Рисует игровую сцену.
         """
         pr.clear_background(BLACK_BACKGROUND)
-        pr.draw_text_ex(font, "Game Scene".encode(), (SCREEN_WIDTH // 2 - 100, SCREEN_HEIGHT // 2), FONT_SIZE, 1.0, WHITE_TEXT)
+        pr.draw_text_ex(font, "Game Scene", (SCREEN_WIDTH // 2 - 100, SCREEN_HEIGHT // 2), FONT_SIZE, 1.0, WHITE_TEXT)
