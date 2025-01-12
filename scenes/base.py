@@ -1,4 +1,3 @@
-import pyray as pr
 from settings import font
 # Базовый класс для сцен
 class SceneBase:

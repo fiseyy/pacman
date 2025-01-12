@@ -6,8 +6,8 @@ pr.set_target_fps(60)  # Установка целевого FPS
 
 # Основной цикл игры
 while not pr.window_should_close():
-    pr.begin_drawing()
     handle_key_presses()
+    pr.begin_drawing()
     state.current_scene.draw()
     pr.end_drawing()
-pr.CloseWindow()
+pr.close_window()

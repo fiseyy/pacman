@@ -2,7 +2,7 @@ from scenes.menu import MenuScene
 from scenes.base import SceneBase
 from scenes.pause import PauseScene
 from scenes.game import GameScene
-import raylib as rl
+import pyray as pr
 class GameState:
     """
    Класс для управления состоянием игры.
@@ -41,7 +41,7 @@ def handle_key_presses() -> None:
     """
     Обработка нажатий клавиш для управления сценами.
     """
-    if rl.IsKeyPressed(rl.KEY_P):
+    if pr.is_key_pressed(pr.KEY_P):
         if isinstance(state.current_scene, GameScene):
             state.change_scene(PauseScene())  # Переход в сцену паузы
         elif isinstance(state.current_scene, PauseScene):

@@ -1,4 +1,4 @@
-from raylib import LoadFont, GetFontDefault
+from pyray import get_font_default
 SCREEN_WIDTH = 800  # Ширина окна
 SCREEN_HEIGHT = 600  # Высота окна
 YELLOW_BACKGROUND = (255, 255, 0, 255)  # Желтый фон
@@ -9,8 +9,4 @@ FONT_SIZE = 40  # Размер шрифта
 BUTTON_WIDTH = 200  # Ширина кнопки
 BUTTON_HEIGHT = 50  # Высота кнопки
 # Загрузка шрифта
-try:
-    font = LoadFont("ofont.ru_Zeitmax.ttf".encode())  # Путь к шрифту
-except Exception as e:
-    print(f"Ошибка загрузки шрифта: {e}")
-    font = GetFontDefault()  # Используем стандартный шрифт, если пользовательский не загрузился
+font = get_font_default()
