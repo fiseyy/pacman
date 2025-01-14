@@ -1,6 +1,6 @@
 import pyray
 from raylib import colors
-from base import BaseObject
+from objects.base import BaseObject
 
 
 class Rect(BaseObject):
