@@ -1,8 +1,25 @@
 import pyray as pr
 import random
+
+# Класс для отрисовки поля
+class FieldDrawer:
+    def __init__(self, field, cell_size):
+        self.field = field
+        self.cell_size = cell_size
+
+    def draw(self):
+        for y, row in enumerate(self.field):
+            for x, cell in enumerate(row):
+                if cell == '#':
+                    pr.draw_rectangle(x * self.cell_size, y * self.cell_size, self.cell_size, self.cell_size, pr.BLUE)  # Стены
+                elif cell == '_':
+                    pr.draw_rectangle(x * self.cell_size, y * self.cell_size, self.cell_size, self.cell_size, pr.BLACK)  # Пустые ячейки
+                elif cell == 'T':
+                    pr.draw_rectangle(x * self.cell_size, y * self.cell_size, self.cell_size, self.cell_size, pr.YELLOW)  # Порталы
+
 # Базовый класс для привидений
 class Ghost:
-    def __init__(self, x, y, cell_size, color, field_matrix):
+    def __init__(self, x, y, cell_size, color):
         self.x = x
         self.y = y
         self.cell_size = cell_size
@@ -11,7 +28,7 @@ class Ghost:
         self.dy = 0
         self.speed = 0.15  # Увеличенная скорость привидения
         self.previous_directions = []  # Список предыдущих направлений
-        self.field_matrix = field_matrix  # Матрица для проверки на портал
+
     def update(self):
         if self.dx != 0 or self.dy != 0:
             new_x = self.x + self.dx * self.speed
@@ -27,7 +44,7 @@ class Ghost:
                 self.dx, self.dy = 0, 0
 
                 # Проверка на портал
-                if self.field_matrix[int(self.y)][int(self.x)] == 'T':
+                if field_matrix[int(self.y)][int(self.x)] == 'T':
                     self.teleport()
 
         else:
@@ -36,14 +53,14 @@ class Ghost:
     def can_move(self, new_x, new_y):
         int_x = int(new_x)
         int_y = int(new_y)
-        return (0 <= int_x < len(self.field_matrix[0]) and 
-                0 <= int_y < len(self.field_matrix) and 
-                self.field_matrix[int_y][int_x] != '#')
+        return (0 <= int_x < len(field_matrix[0]) and 
+                0 <= int_y < len(field_matrix) and 
+                field_matrix[int_y][int_x] != '#')
 
     def teleport(self):
         """Телепортирует привидение в случайное место на карте."""
-        valid_positions = [(x, y) for y in range(len(self.field_matrix)) for x in range(len(self.field_matrix[0]))
-                           if self.field_matrix[y][x] == '_']
+        valid_positions = [(x, y) for y in range(len(field_matrix)) for x in range(len(field_matrix[0]))
+                           if field_matrix[y][x] == '_']
         if valid_positions:
             self.x, self.y = random.choice(valid_positions)
 
@@ -76,4 +93,3 @@ class Ghost:
         
         if len(self.previous_directions) > 10:
             self.previous_directions.pop(0)
-

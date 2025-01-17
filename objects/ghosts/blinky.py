@@ -1,5 +1,4 @@
 from base import Ghost
-
 # Класс для красного привидения (Blinky)
 class BlinkyGhost(Ghost):
     def change_direction(self, field):
