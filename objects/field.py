@@ -71,25 +71,25 @@ class FieldDrawer:
        self.cell_size = cell_size
        self.textures = Textures()
 
-   def draw(self):
+   def draw(self,x_to_center=0, y_to_center=0):
        """
        Рисует поле.
        """
        for y, row in enumerate(self.field):
            for x, cell in enumerate(row):
                if cell == '#':
-                   pr.draw_rectangle(x * self.cell_size, y * self.cell_size, self.cell_size, self.cell_size, pr.BLUE)  # Стены
+                   pr.draw_rectangle(x_to_center + x * self.cell_size, y_to_center + y * self.cell_size, self.cell_size, self.cell_size, pr.BLUE)  # Стены
                elif cell == '_':
-                   pr.draw_rectangle(x * self.cell_size, y * self.cell_size, self.cell_size, self.cell_size, pr.BLACK)  # Пустые ячейки
+                   pr.draw_rectangle(x_to_center + x * self.cell_size, y_to_center + y * self.cell_size, self.cell_size, self.cell_size, pr.BLACK)  # Пустые ячейки
                elif cell == '.':
                    # малое зерно
                    texture = self.textures.get_texture("seed")
-                   pr.draw_texture(texture, x * self.cell_size, y * self.cell_size, pr.WHITE)
+                   pr.draw_texture(texture, x_to_center + x * self.cell_size, y_to_center + y * self.cell_size, pr.WHITE)
                    # pr.draw_rectangle(x * self.cell_size, y * self.cell_size, self.cell_size, self.cell_size, pr.YELLOW) # старая реализация малого зерна
                elif cell == 'S':
                    # большое зерно
                    texture = self.textures.get_texture("energizer")
-                   pr.draw_texture(texture, x * self.cell_size, y * self.cell_size, pr.WHITE)
+                   pr.draw_texture(texture, x_to_center + x * self.cell_size, y_to_center + y * self.cell_size, pr.WHITE)
                    # pr.draw_rectangle(x * self.cell_size, y * self.cell_size, self.cell_size, self.cell_size, pr.YELLOW) # старая реализация большого зерна
                elif cell == 'T':
-                   pr.draw_rectangle(x * self.cell_size, y * self.cell_size, self.cell_size, self.cell_size, pr.YELLOW)
+                   pr.draw_rectangle(x_to_center + x * self.cell_size, y_to_center + y * self.cell_size, self.cell_size, self.cell_size, pr.YELLOW)
