@@ -1,3 +1,7 @@
+sound = {
+    "MUSIC_VOLUME" : 0.2,
+    "SOUND_VOLUME" : 0.2
+}
 from pyray import get_font_default
 SCREEN_WIDTH = 800  # Ширина окна
 SCREEN_HEIGHT = 600  # Высота окна

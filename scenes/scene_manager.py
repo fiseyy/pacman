@@ -44,3 +44,8 @@ def handle_key_presses() -> None:
             state.change_scene("pause") # Переход в сцену паузы
         elif isinstance(state.current_scene, PauseScene):
             state.change_scene("game")  # Переход в меню
+    if pr.is_key_pressed(pr.KEY_Q):
+        if isinstance(state.current_scene, GameScene):
+            state.change_scene("menu")
+        if isinstance(state.current_scene, PauseScene):
+            state.change_scene("menu")
