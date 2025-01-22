@@ -3,8 +3,8 @@ import random
 from logic.field import Field
 # Класс для отрисовки поля
 class FieldDrawer:
-    def __init__(self, field, cell_size):
-        self.field = str(field)
+    def __init__(self, field:Field, cell_size):
+        self.field = field.load_field()
         print(self.field)
         self.cell_size = cell_size
 
@@ -133,3 +133,7 @@ class GhostWallDirectionChooser:
                 self.ghost.set_direction(self.dminus(direction))
             else:
                 self.ghost.set_direction(self.dminus(direction))
+
+# Пример запуска
+#     field = Field("C:\\git\\pacman-rl-2-group\\logic\\field.txt")
+#     field_drawer = FieldDrawer(field,15)
