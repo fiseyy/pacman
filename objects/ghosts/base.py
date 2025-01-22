@@ -1,10 +1,11 @@
 import pyray as pr
 import random
-
+from logic.field import Field
 # Класс для отрисовки поля
 class FieldDrawer:
     def __init__(self, field, cell_size):
-        self.field = field
+        self.field = str(field)
+        print(self.field)
         self.cell_size = cell_size
 
     def draw(self):
@@ -14,6 +15,12 @@ class FieldDrawer:
                     pr.draw_rectangle(x * self.cell_size, y * self.cell_size, self.cell_size, self.cell_size, pr.BLUE)  # Стены
                 elif cell == '_':
                     pr.draw_rectangle(x * self.cell_size, y * self.cell_size, self.cell_size, self.cell_size, pr.BLACK)  # Пустые ячейки
+                elif cell == '.':
+                    # малое зерно
+                    pr.draw_rectangle(x * self.cell_size, y * self.cell_size, self.cell_size, self.cell_size, pr.YELLOW)
+                elif cell == 'S':
+                    # большое зерно
+                    pr.draw_rectangle(x * self.cell_size, y * self.cell_size, self.cell_size, self.cell_size, pr.YELLOW)
                 elif cell == 'T':
                     pr.draw_rectangle(x * self.cell_size, y * self.cell_size, self.cell_size, self.cell_size, pr.YELLOW)  # Порталы
 
