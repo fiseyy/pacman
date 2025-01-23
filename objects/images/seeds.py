@@ -1,34 +1,27 @@
-import pyray
-from objects.figure import Circle
-import application
-import settings
+import pyray as pr
 
-class Seed(Circle):
+
+class Seed:
     """
     Класс малого зерна
 
     Args:
         x: Координата по х
         y: Координата по y
-        radius: Радиус круга
-        color: Цвет круга
+        radius: Радиус круга, по умолчанию 10
         weight: Вес зерна, по умолчанию 10
     """
-    def init(self, x, y, radius = 10, color=None, weight = 10):
-        super().init(x, y, radius, pyray.YELLOW)
+    def __init__(self, x, y, cell_size, texture, weight = 10, radius = 10):
         self.weight = weight
-
-class Energizer(Circle):
-    """
-    Класс большого зерна
-
-    Args:
-        x: Координата по х
-        y: Координата по y
-        radius: Радиус круга
-        color: Цвет круга
-        weight: Вес зерна, по умолчанию 50
-    """
-    def init(self, x, y, radius = 20, color=None, weight = 50):
-        super().init(x, y, radius, pyray.YELLOW)
-        self.weight = weight
+        self.x = x * cell_size # номер клетки по X
+        self.y = y * cell_size # номер клетки по Y
+        self.radius = radius
+        self.texture = texture
+        self.cell_size = cell_size
+    def draw(self):
+        pr.draw_texture(self.texture, self.x, self.y, pr.WHITE)
+    def collisions(self, pacman: pr.Rectangle):
+        # TODO: Добавить проверку на коллизию с Pacman
+        pass
+    def hide(self):
+        pass
