@@ -1,6 +1,6 @@
 from scenes.base import SceneBase, draw_button
 import pyray as pr
-from settings import BLACK_BACKGROUND, font, SCREEN_HEIGHT, SCREEN_WIDTH, FONT_SIZE, WHITE_TEXT, BUTTON_HEIGHT, BUTTON_WIDTH, sound
+from settings import BLACK_BACKGROUND, font, SCREEN_HEIGHT, SCREEN_WIDTH, FONT_SIZE, WHITE_TEXT, BUTTON_HEIGHT, BUTTON_WIDTH, sound, save_settings
 MUSIC_VOLUME = sound["MUSIC_VOLUME"]
 SOUND_VOLUME = sound["SOUND_VOLUME"]
 class MusicChangerButton():
@@ -126,21 +126,31 @@ class SettingsScene(SceneBase):
        Входит в сцену настроек.
         """
         print("Entering Settings Scene")
-        # Переменные для текстового поля
+        # Обновляем значения громкости из sound
+        self.music_changer.music_volume = sound["MUSIC_VOLUME"]
+        self.sound_changer.sound_volume = sound["SOUND_VOLUME"]
+        self.music_changer.params["input_text"] = str(self.music_changer.music_volume)
+        self.sound_changer.params["input_text"] = str(self.sound_changer.sound_volume)
         
     def apply_changes(self):
         print("apply")
         if self.music_changer.changed:
-            MUSIC_VOLUME = self.music_changer.music_volume
+            sound["MUSIC_VOLUME"] = self.music_changer.music_volume
         if self.sound_changer.changed:
-            SOUND_VOLUME = self.sound_changer.sound_volume
+            sound["SOUND_VOLUME"] = self.sound_changer.sound_volume
+
+        # Сохранение настроек в файл
+        save_settings(sound)
+
         self.music_changer.changed = False
         self.sound_changer.changed = False
         
     def discard_changes(self):
         print("discard")
-        self.music_changer.params["input_text"] = str(MUSIC_VOLUME)
-        self.sound_changer.params["input_text"] = str(SOUND_VOLUME)
+        self.music_changer.music_volume = sound["MUSIC_VOLUME"]
+        self.sound_changer.sound_volume = sound["SOUND_VOLUME"]
+        self.music_changer.params["input_text"] = str(self.music_changer.music_volume)
+        self.sound_changer.params["input_text"] = str(self.sound_changer.sound_volume)
         self.music_changer.changed = False
         self.sound_changer.changed = False
     def draw(self):
