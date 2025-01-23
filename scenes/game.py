@@ -19,15 +19,14 @@ class GameScene(SceneBase):
         self.field = Field("objects/maps/field.txt")
         self.field_drawer = FieldDrawer(self.field,cell_size)
         self.inky_ghost = InkyGhost(x=1, y=1,cell_size=cell_size, field=self.field)
+        self.cherry=Cherry(1,2,5,cell_size)
         super().__init__()
     def enter(self):
         """
        Входит в игровую сцену.
         """
-        self.cherry=Cherry(100,100,20)
-        self.cherry.show()
         print("Entering Game Scene")
-
+        self.cherry.start()
     def draw(self):
         """
        Рисует игровую сцену.
@@ -39,6 +38,7 @@ class GameScene(SceneBase):
         self.process_additional_logic()  # Обработка дополнительной логики
         self.inky_ghost.update()  # Обновляем состояние Inky
         self.inky_ghost.draw()    # Рисуем Inky
+        self.cherry.draw() # Рисуем Cherry
     def process_additional_logic(self):
         self.inky_ghost.change_direction(self.field)
         self.cherry.logic()

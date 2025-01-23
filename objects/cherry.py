@@ -1,41 +1,44 @@
 import pyray as pr
 import time
-"""библиотека для использования времени"""
-class Cherry:
-    """класс вишенки
-    когда хотим показать вишенку, вызывается функция show она делает параметр self.is_alive=True и засекает время,
-    что позволяет в дальнейшем работать с функцией logic() (вызывается в основном цикле всегда при отрисовке), 
-    чтобы вишенку скрыть требуется вызов функции hide()"""
-    def __init__(self,x,y,r):
-        """конструктор класса
 
-        Args:
-            x (int): координата x вишенки
-            y (int): координата y вишенки
-            r (int): радиус вишенки
-        """
-        self.x=x
-        self.y=y
-        self.r=r
-        self.SHOW_TIME=3
-        self.HIDE_TIME=5
-        self.start_time=pr.get_time()
+class Cherry:
+    def __init__(self, x, y, r, cell_size):
+        self.x = x * cell_size
+        self.y = y * cell_size
+        self.r = r
+        self.SHOW_TIME = 3
+        self.HIDE_TIME = 10
+        self.start_time = pr.get_time()
         self.is_alive = False
+        self.cell_size = cell_size
+        self.state = 'hidden'  # 'hidden' or 'visible'
+        self.start_delay = 10  # время задержки перед первым показом
+        self.initial_start_time = pr.get_time()  # время запуска
 
     def show(self):
-        """показывает вишенку через 5 секунд"""
-        self.is_alive=True
-        self.start_time=pr.get_time()
-        
-    
+        self.is_alive = True
+        self.start_time = pr.get_time()
+        self.state = 'visible'
+
     def hide(self):
-        """скрывает вишенку"""
-        self.is_alive=False
-    
+        self.is_alive = False
+        self.state = 'hidden'
+
     def logic(self):
-        """показывает через 3 сек скрывает через 5 сек"""
-        if not(self.is_alive):
-            return
-        time_now=-self.start_time+pr.get_time()
-        if time_now>=self.SHOW_TIME and time_now<=self.HIDE_TIME+self.SHOW_TIME:
-            pr.draw_circle(self.x,self.y,self.r,pr.RED)
+        current_time = pr.get_time() - self.start_time
+        
+        if self.state == 'visible':
+            if current_time >= self.SHOW_TIME:
+                self.hide()
+        else:  # state is 'hidden'
+            if current_time >= self.HIDE_TIME:
+                self.show()
+
+    def draw(self):
+        if self.is_alive:
+            pr.draw_circle(self.x + self.cell_size // 2, self.y + self.cell_size // 2, self.r, pr.RED)
+
+    def start(self):
+        # Проверяем, прошло ли 10 секунд с момента запуска
+        if pr.get_time() - self.initial_start_time >= self.start_delay:
+            self.show()
