@@ -46,6 +46,12 @@ class Textures:
                "down": pr.load_texture_from_image(pr.load_image("images/ghosts/pinky/pinky_down_1.png")),
                "left": pr.load_texture_from_image(pr.load_image("images/ghosts/pinky/pinky_left_1.png")),
                "right": pr.load_texture_from_image(pr.load_image("images/ghosts/pinky/pinky_right_1.png"))
+            },
+            "pacman": {
+                "up": pr.load_texture_from_image(pr.load_image("images/pacman/pacman_up_1.png")),
+                "down": pr.load_texture_from_image(pr.load_image("images/pacman/pacman_down_1.png")),
+                "left": pr.load_texture_from_image(pr.load_image("images/pacman/pacman_left_1.png")),
+                "right": pr.load_texture_from_image(pr.load_image("images/pacman/pacman_right_1.png"))
             }
        }
 
