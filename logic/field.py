@@ -14,5 +14,11 @@ class Field:
                     field_data.append(list(cleaned_line))
         return field_data
     
+    def __getitem__(self, index):
+        return self.field[index]
+    
+    def __len__(self):
+        return len(self.field)
+    
     def __repr__(self):
         return '\n'.join(''.join(row) for row in self.field)

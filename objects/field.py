@@ -1,50 +1,6 @@
 from logic.field import Field
 import pyray as pr
-
-# Класс для преобразования изображений в текстуры
-class Textures:
-   """
-   Класс для работы с текстурами.
-
-   Атрибуты:
-       seed (pr.Texture): Текстура малого зерна.
-       energizer (pr.Texture): Текстура большого зерна.
-       textures (dict): Словарь текстур.
-
-   Методы:
-       get_texture(texture_name): Возвращает текстуру по имени.
-       unload(): Выгружает текстуры.
-   """
-
-   def __init__(self):
-       """
-       Инициализирует объект класса Textures.
-       """
-       self.seed = pr.load_texture_from_image(pr.load_image("images/corn_1.png"))  # текстура малого зерна
-       self.energizer = pr.load_texture_from_image(pr.load_image("images/corn_2.png"))  # текстура большого зерна
-       self.textures = {
-           "seed": self.seed,
-           "energizer": self.energizer
-       }
-
-   def get_texture(self, texture_name):
-       """
-       Возвращает текстуру по имени.
-
-       Аргументы:
-           texture_name (str): Имя текстуры.
-
-       Возвращает:
-           pr.Texture: Текстура.
-       """
-       return self.textures[texture_name]
-
-   def unload(self):
-       """
-       Выгружает текстуры.
-       """
-       pr.unload_texture(self.seed)
-       pr.unload_texture(self.energizer)
+from objects.textures import Textures
 
 class FieldDrawer:
    """
@@ -81,6 +37,8 @@ class FieldDrawer:
                    pr.draw_rectangle(x_to_center + x * self.cell_size, y_to_center + y * self.cell_size, self.cell_size, self.cell_size, pr.BLUE)  # Стены
                elif cell == '_':
                    pr.draw_rectangle(x_to_center + x * self.cell_size, y_to_center + y * self.cell_size, self.cell_size, self.cell_size, pr.BLACK)  # Пустые ячейки
+               elif cell == 'D':
+                   pr.draw_rectangle(x_to_center + x * self.cell_size, y_to_center + y * self.cell_size, self.cell_size, self.cell_size, pr.BLACK)  # Декоративные ячейки
                elif cell == '.':
                    # малое зерно
                    texture = self.textures.get_texture("seed")
