@@ -73,12 +73,15 @@ class Ghost:
                 self.field[int_y][int_x] != '#')
 
     def teleport(self):
-        """Телепортирует привидение в случайное место на карте."""
+        """Телепортирует привидение из одного портала в другой на карте."""
         valid_positions = [(x, y) for y in range(len(self.field)) for x in range(len(self.field[y]))
-                        if self.field[y][x] == '_']
+                        if self.field[y][x] == 'T']
         if valid_positions:
-            self.__x, self.__y = random.choice(valid_positions)
-
+            for position in valid_positions:
+                if (self.__x, self.__y) != position:
+                    self.__x = position[0]
+                    self.__y = position[1]
+                    break
     def draw(self):
         # Определяем позицию для отрисовки текстуры
         draw_x = int(self.__x * self.cell_size)  # Приводим к int
