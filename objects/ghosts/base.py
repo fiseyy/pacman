@@ -18,8 +18,8 @@ class Ghost:
         self.teleported_to_portal = False
     def update(self):
         # движение в зависимости от direction и свободных клеток слева/справа
-        # print(self.direction.can_move(), self.direction.get_direction())
-        print(self.movement.can_move(), self.movement.get_direction())
+        # print(self.direction.can_move(), self.direction.get_direction())  # DEBUG PRINT
+        # print(self.movement.can_move(), self.movement.get_direction()) # DEBUG PRINT
         if not self.movement.is_crossroad() and not self.movement.is_portal():
             self.changed_direction_on_crossroad = False
             self.teleported_to_portal = False
