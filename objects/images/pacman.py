@@ -59,7 +59,15 @@ class Pacman():
        Рисует пакмана.
        """
        pr.draw_texture(self.texture, self.pos_x, self.pos_y, pr.WHITE)
-
+   def change_texture_direction(self, new_direction):
+       if new_direction == (0,-1):
+           self.texture = self.textures["up"]
+       elif new_direction == (0,1):
+           self.texture = self.textures["down"]
+       elif new_direction == (-1,0):
+           self.texture = self.textures["left"]
+       elif new_direction == (1,0):
+           self.texture = self.textures["right"]
    def move(self):
        """
        Передвигает пакмана в 4х направлениях.
@@ -68,8 +76,10 @@ class Pacman():
        if self.future_direction:
            if self.movement.can_move(self.future_direction) and self.pos_x % self.__cell_size == 0 and self.pos_y % self.__cell_size == 0 and not self.future_direction == self.movement.reverse_direction(self.movement.direction):
                self.movement.set_direction(self.future_direction)
+               self.change_texture_direction(self.future_direction)
            elif self.future_direction == self.movement.reverse_direction(self.movement.direction):
                self.movement.set_direction(self.future_direction)
+               self.change_texture_direction(self.future_direction)
 
        if self.movement.can_move():
            self.pos_x += self.movement.get_direction()[0] * self.speed
