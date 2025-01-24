@@ -1,25 +1,5 @@
 import pyray as pr
 
-class ScoreCounter:
-    def __init__(self, initial_score=0):
-        """Инициализирует счётчик очков с заданным начальным значением."""
-        self.score = initial_score
-
-    def add(self, points):
-        """Увеличивает количество очков на заданное значение."""
-        self.score += points
-
-    def remove(self, points):
-        """Уменьшает количество очков на заданное значение, если это возможно."""
-        if self.score >= points:
-            self.score -= points
-        else:
-            self.score = 0
-
-    def get_score(self):
-        """Возвращает текущее количество очков."""
-        return self.score
-
 class RecalculableText:
     def __init__(self, font_size=36):
         """Базовый класс для отображения изменяемого текста."""
