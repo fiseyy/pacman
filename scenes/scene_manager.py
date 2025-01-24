@@ -21,7 +21,7 @@ class GameState:
             self.current_scene = MenuScene(self)
         elif new_scene == "game":
             from scenes.game import GameScene
-            self.current_scene = GameScene(15)
+            self.current_scene = GameScene(16)
         elif new_scene == "pause":
             from scenes.pause import PauseScene
             self.current_scene = PauseScene()

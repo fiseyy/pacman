@@ -22,3 +22,8 @@ class Field:
     
     def __repr__(self):
         return '\n'.join(''.join(row) for row in self.field)
+
+    def to_array(self):
+        # print([row[:] for row in self.field])
+        # return [row[:] for row in self.field]  <---- для этого будет field.to_array()[y][x]
+        return [list(column) for column in zip(*self.field)] # <---- для этого будет field.to_array()[x][y]
