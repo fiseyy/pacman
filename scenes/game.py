@@ -21,7 +21,7 @@ class GameScene(SceneBase):
         self.textures = Textures()
         self.field = Field("objects/maps/field.txt")
         self.field_drawer = FieldDrawer(self.field,cell_size)
-        self.inky_ghost = InkyGhost(x=1, y=14,cell_size=cell_size, field=self.field,textures=self.textures)
+        self.inky_ghost = InkyGhost(x=1, y=1,cell_size=cell_size, field=self.field,textures=self.textures)
         self.pacman = Pacman(12,1,cell_size, self.textures.get_texture("pacman"))
         self.cherry=Cherry(1,2,5,cell_size)
         super().__init__()
