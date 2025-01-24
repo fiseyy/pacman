@@ -64,6 +64,11 @@ class Pacman():
        pr.draw_texture(self.texture, self.pos_x, self.pos_y, pr.WHITE)
 
    def texture_animation(self, pacman_direction):
+       """Замена текстурок пакмана, при движении анимация
+
+       Аргументы:
+           pacman_direction (tuple): направление движения
+       """
        current_time = pr.get_time()  # Получаем текущее время в секундах
        frame = int(current_time / self.animation_duration) % 2
        if pacman_direction == (0, -1):  # Движение вверх
