@@ -7,6 +7,8 @@ from objects.textures import Textures
 from logic.field import Field
 from objects.ghosts.inky import InkyGhost
 from objects.images.pacman import Pacman
+from objects.score import ScoreDrawer
+from logic.score import ScoreCounter
 class GameScene(SceneBase):
     """
    Класс для игровой сцены.
@@ -24,7 +26,14 @@ class GameScene(SceneBase):
         self.inky_ghost = InkyGhost(x=1, y=1,cell_size=cell_size, field=self.field,textures=self.textures)
         self.pacman = Pacman(1,1,cell_size, self.textures.get_texture("pacman"),self.field)
         self.cherry=Cherry(1,2,5,cell_size)
+        self.score_counter = ScoreCounter(initial_score=0)
+        self.score_drawer = ScoreDrawer(SCREEN_WIDTH - 250, 10, self.score_counter)
         super().__init__()
+    def debug_add_remove_score(self):
+        if pr.is_key_pressed(pr.KEY_UP):
+            self.score_counter.add(10)
+        elif pr.is_key_pressed(pr.KEY_DOWN):
+            self.score_counter.remove(5)
     def enter(self):
         """
        Входит в игровую сцену.
@@ -44,6 +53,9 @@ class GameScene(SceneBase):
         self.inky_ghost.draw()    # Рисуем Inky
         self.cherry.draw() # Рисуем Cherry
         self.pacman.draw() # Рисуем Pacman
+        self.score_drawer.draw() # Рисуем очки
+        self.debug_add_remove_score() # на стрелочку вверх/вниз можно увеличивать / уменьшать очки (DEBUG FEATURE)
+        
     def process_additional_logic(self):
         # self.inky_ghost.change_direction(self.field)
         self.cherry.logic()
