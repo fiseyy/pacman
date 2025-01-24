@@ -10,7 +10,7 @@ class Ghost:
         self.pos_cell_x = x # номер клетки
         self.pos_cell_y = y
         self.speed = 1
-        self.direction = GhostMovement(self.pos_cell_x, self.pos_cell_y, direction, field) # направление движения
+        self.movement = GhostMovement(self.pos_cell_x, self.pos_cell_y, direction, field) # направление движения
         self.textures = textures # предпологается, что взят не весь кортеж текстур, а только нужного призрака
         self.texture = None # текущая текстура в зависимости от направления
         self.field = field # предпологается, что поле не пустое
@@ -18,12 +18,12 @@ class Ghost:
     def update(self):
         # движение в зависимости от direction и свободных клеток слева/справа
         # print(self.direction.can_move(), self.direction.get_direction())
-        print(self.direction.can_move(), self.direction.get_direction())
-        if not self.direction.is_crossroad() and not self.direction.is_portal():
+        print(self.movement.can_move(), self.movement.get_direction())
+        if not self.movement.is_crossroad() and not self.movement.is_portal():
             self.changed_direction_on_crossroad = False
-            if self.direction.can_move():
-                self.pos_x += self.direction.get_direction()[0] * self.speed
-                self.pos_y += self.direction.get_direction()[1] * self.speed
+            if self.movement.can_move():
+                self.pos_x += self.movement.get_direction()[0] * self.speed
+                self.pos_y += self.movement.get_direction()[1] * self.speed
 
                 # if isinstance(self.pos_x/self.__cell_size, int):
                 if self.pos_x/self.__cell_size % 1 == 0 and self.pos_y/self.__cell_size % 1 == 0:
@@ -33,18 +33,18 @@ class Ghost:
                     self.pos_cell_x = int(self.pos_x / self.__cell_size)
                     self.pos_cell_y = int(self.pos_y / self.__cell_size)
                     # также поменяем в direction
-                    self.direction.pos_cell_x = self.pos_cell_x
-                    self.direction.pos_cell_y = self.pos_cell_y
+                    self.movement.pos_cell_x = self.pos_cell_x
+                    self.movement.pos_cell_y = self.pos_cell_y
             else:
-                self.direction.choose_new_direction()
-        elif self.direction.is_crossroad():
+                self.movement.choose_new_direction()
+        elif self.movement.is_crossroad():
             if not self.changed_direction_on_crossroad:
-                self.direction.choose_new_direction()
+                self.movement.choose_new_direction()
                 self.changed_direction_on_crossroad = True
             else:
-                if self.direction.can_move():
-                    self.pos_x += self.direction.get_direction()[0] * self.speed
-                    self.pos_y += self.direction.get_direction()[1] * self.speed
+                if self.movement.can_move():
+                    self.pos_x += self.movement.get_direction()[0] * self.speed
+                    self.pos_y += self.movement.get_direction()[1] * self.speed
                     # if isinstance(self.pos_x/self.__cell_size, int):
                     if self.pos_x/self.__cell_size % 1 == 0 and self.pos_y/self.__cell_size % 1 == 0:
                         #DEBUG PRINT
@@ -53,19 +53,19 @@ class Ghost:
                         self.pos_cell_x = int(self.pos_x / self.__cell_size)
                         self.pos_cell_y = int(self.pos_y / self.__cell_size)
                         # также поменяем в direction
-                        self.direction.pos_cell_x = self.pos_cell_x
-                        self.direction.pos_cell_y = self.pos_cell_y
-        elif self.direction.is_portal():
-            self.direction.teleport()
+                        self.movement.pos_cell_x = self.pos_cell_x
+                        self.movement.pos_cell_y = self.pos_cell_y
+        elif self.movement.is_portal():
+            self.movement.teleport()
     def draw(self):
         #взятие нужной модели
-        if self.direction.get_direction() == (1, 0):
+        if self.movement.get_direction() == (1, 0):
             self.texture = self.textures["right"]
-        elif self.direction.get_direction() == (-1, 0):
+        elif self.movement.get_direction() == (-1, 0):
             self.texture = self.textures["left"]
-        elif self.direction.get_direction() == (0, 1):
+        elif self.movement.get_direction() == (0, 1):
             self.texture = self.textures["down"]
-        elif self.direction.get_direction() == (0, -1):
+        elif self.movement.get_direction() == (0, -1):
             self.texture = self.textures["up"]
         else:
             self.texture = self.textures["right"]
