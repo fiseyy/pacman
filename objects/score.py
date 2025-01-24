@@ -1,4 +1,4 @@
-import pygame as pr
+import pyray as pr
 
 class ScoreCounter:
     def __init__(self, initial_score=0):
@@ -23,12 +23,11 @@ class ScoreCounter:
 class RecalculableText:
     def __init__(self, font_size=36):
         """Базовый класс для отображения изменяемого текста."""
-        self.font = pr.font.Font(None, font_size)
+        self.font_size = font_size
 
-    def draw(self, screen, text="", position=(0, 0), color=(255, 255, 255)):
+    def draw(self, text, position, color=pr.DARKGRAY):
         """Отображает текст на экране."""
-        rendered_text = self.font.render(text, True, color)
-        screen.blit(rendered_text, position)
+        pr.draw_text(text, position[0], position[1], self.font_size, color)
 
 class ScoreDrawer(RecalculableText):
     def __init__(self, x, y, score_counter):
@@ -44,38 +43,7 @@ class ScoreDrawer(RecalculableText):
         self.y = y
         self.score_counter = score_counter
 
-    def draw(self, screen):
+    def draw(self):
         """Отрисовывает количество очков на экране, используя сигнатуру из RecalculableText."""
         score_text = f'Score: {self.score_counter.get_score()}'
-        super().draw(screen, text=score_text, position=(self.x, self.y))
-
-def main():
-    # Инициализация Pygame
-    pr.init()
-    screen = pr.display.set_mode((800, 600))
-    pr.display.set_caption("Score Counter Example")
-
-    # Создание объектов ScoreCounter и ScoreDrawer
-    score_counter = ScoreCounter(initial_score=0)
-    score_drawer = ScoreDrawer(50, 100, score_counter)
-
-    running = True
-    while running:
-        for event in pr.event.get():
-            if event.type == pr.QUIT:
-                running = False
-            elif event.type == pr.KEYDOWN:
-                if event.key == pr.K_UP:
-                    score_counter.add(10)
-                elif event.key == pr.K_DOWN:
-                    score_counter.remove(5)
-
-        screen.fill((0, 0, 0))  # Очистка экрана (черный фон)
-        score_drawer.draw(screen)  # Отрисовка очков
-
-        pr.display.flip()  # Обновление экрана
-
-    pr.quit()
-
-if __name__ == "__main__":
-    main()
+        super().draw(score_text, (self.x, self.y))
