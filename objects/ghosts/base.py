@@ -3,7 +3,7 @@ import random
 from objects.field import Field
 # Привидения
 class Ghost:
-    def __init__(self,x=0,y=0,cell_size=10, direction=(-1,0), field:Field=None, textures=None):
+    def __init__(self,x=0,y=0,cell_size=10, direction=(0,1), field:Field=None, textures=None):
         self.pos_x = x * cell_size # координата по горизонтали (x)
         self.pos_y = y * cell_size # координата по вертикали (y)
         self.__cell_size = cell_size
