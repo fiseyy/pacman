@@ -53,21 +53,43 @@ class Pacman():
        self.changed_direction_on_crossroad = False
        self.teleported_to_portal = False
        self.future_direction = None  # Переменная для хранения будущего направления
+       self.animation_time = 0  # Время анимации
+       self.animation_frame = 0  # Текущий кадр анимации
+       self.animation_duration = 0.3  # Длительность одного кадра анимации (в секундах)
 
    def draw(self):
        """
        Рисует пакмана.
        """
        pr.draw_texture(self.texture, self.pos_x, self.pos_y, pr.WHITE)
-   def change_texture_direction(self, new_direction):
-       if new_direction == (0,-1):
-           self.texture = self.textures["up"]
-       elif new_direction == (0,1):
-           self.texture = self.textures["down"]
-       elif new_direction == (-1,0):
-           self.texture = self.textures["left"]
-       elif new_direction == (1,0):
-           self.texture = self.textures["right"]
+
+   def texture_animation(self, pacman_direction):
+       current_time = pr.get_time()  # Получаем текущее время в секундах
+       frame = int(current_time / self.animation_duration) % 2
+       if pacman_direction == (0, -1):  # Движение вверх
+           if frame == 0:
+               self.texture = self.textures["up"]
+           else:
+               if self.movement.can_move():
+                   self.texture = self.textures["up_alt"]
+       elif pacman_direction == (0, 1):  # Движение вниз
+           if frame == 0:
+               self.texture = self.textures["down"]
+           else:
+               if self.movement.can_move():
+                   self.texture = self.textures["down_alt"]
+       elif pacman_direction == (-1, 0):  # Движение влево
+           if frame == 0:
+               self.texture = self.textures["left"]
+           else:
+               if self.movement.can_move():
+                   self.texture = self.textures["left_alt"]
+       elif pacman_direction == (1, 0):  # Движение вправо
+           if frame == 0:
+               self.texture = self.textures["right"]
+           else:
+               if self.movement.can_move():
+                   self.texture = self.textures["right_alt"]
    def move(self):
        """
        Передвигает пакмана в 4х направлениях.
@@ -76,11 +98,9 @@ class Pacman():
        if self.future_direction:
            if self.movement.can_move(self.future_direction) and self.pos_x % self.__cell_size == 0 and self.pos_y % self.__cell_size == 0 and not self.future_direction == self.movement.reverse_direction(self.movement.direction):
                self.movement.set_direction(self.future_direction)
-               self.change_texture_direction(self.future_direction)
            elif self.future_direction == self.movement.reverse_direction(self.movement.direction):
                self.movement.set_direction(self.future_direction)
-               self.change_texture_direction(self.future_direction)
-
+       self.texture_animation(self.movement.direction)
        if self.movement.can_move():
            self.pos_x += self.movement.get_direction()[0] * self.speed
            self.pos_y += self.movement.get_direction()[1] * self.speed

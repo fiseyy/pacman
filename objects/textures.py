@@ -51,7 +51,11 @@ class Textures:
                 "up": pr.load_texture_from_image(pr.load_image("images/pacman/pacman_up_1.png")),
                 "down": pr.load_texture_from_image(pr.load_image("images/pacman/pacman_down_1.png")),
                 "left": pr.load_texture_from_image(pr.load_image("images/pacman/pacman_left_1.png")),
-                "right": pr.load_texture_from_image(pr.load_image("images/pacman/pacman_right_1.png"))
+                "right": pr.load_texture_from_image(pr.load_image("images/pacman/pacman_right_1.png")),
+                "up_alt": pr.load_texture_from_image(pr.load_image("images/pacman/pacman_up_2.png")),
+                "down_alt": pr.load_texture_from_image(pr.load_image("images/pacman/pacman_down_2.png")),
+                "left_alt": pr.load_texture_from_image(pr.load_image("images/pacman/pacman_left_2.png")),
+                "right_alt": pr.load_texture_from_image(pr.load_image("images/pacman/pacman_right_2.png"))
             }
        }
 
