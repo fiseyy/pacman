@@ -107,7 +107,7 @@ class GhostMovement:
         self.pos_cell_x = pos_cell_x
         self.pos_cell_y = pos_cell_y
         self.direction = direction # кортеж
-        self.field = field # поле (двумерный массив)
+        self.field = field  # поле (с методом get_array() для получения двумерного массива)
     def choose_new_direction(self):
         self.previous_direction = self.direction
         self.possible_directions:list = self.get_possible_directions()
