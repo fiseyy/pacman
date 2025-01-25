@@ -1,6 +1,6 @@
 import pyray as pr
 import random
-from settings import SCREEN_WIDTH, SCREEN_HEIGHT
+from settings import SCREEN_WIDTH, SCREEN_HEIGHT, load_settings
 
 class Pacman():
    """
@@ -40,6 +40,20 @@ class Pacman():
            textures (Textures): Объект класса Textures для работы с текстурами.
            field (Field): Поле для проверки столкновений.
        """
+        # подключение звуков
+       self.eating_corn_sound = pr.load_sound("sounds/game/eating_corn.mp3")
+       self.eating_ghost_sound = pr.load_sound("sounds/game/eating_ghost.mp3")
+       self.turn_to_blue_sound = pr.load_sound("sounds/game/turn_to_blue.mp3")
+       self.eating_fruit_sound = pr.load_sound("sounds/game/eating_fruit.mp3")
+       
+       self.settings = load_settings()
+       self.sound_volume = self.settings["SOUND_VOLUME"]
+
+       pr.set_sound_volume(self.eating_corn_sound, self.sound_volume)
+       pr.set_sound_volume(self.turn_to_blue_sound, self.sound_volume)
+       pr.set_sound_volume(self.eating_ghost_sound, self.sound_volume)
+       pr.set_sound_volume(self.eating_fruit_sound, self.sound_volume)
+
        self.speed = 1  # скорость пакмана
        self.pos_x = x * cell_size  # абсолютное положение по горизонтали
        self.pos_y = y * cell_size  # абсолютное положение по вертикали
@@ -56,8 +70,11 @@ class Pacman():
        self.animation_time = 0  # Время анимации
        self.animation_frame = 0  # Текущий кадр анимации
        self.animation_duration = 0.3  # Длительность одного кадра анимации (в секундах)
-       self.collision = PacmanCollision(self.pos_cell_x, self.pos_cell_y, self.field)
+       self.collision = PacmanCollision(self.pos_cell_x, self.pos_cell_y, self.field, self)
        self.is_dead = False
+       self.turn_to_blue = False
+       self.turn_to_blue_start = None
+       self.turn_to_blue_end = None
 
    def draw(self):
        """
@@ -337,20 +354,27 @@ class PacmanMovement:
        return (-direction[0], -direction[1])
    
 class PacmanCollision:
-    def __init__(self, pos_cell_x, pos_cell_y, field):
+    def __init__(self, pos_cell_x, pos_cell_y, field, pacman):
         self.pos_cell_x = pos_cell_x
         self.pos_cell_y = pos_cell_y
         self.field = field
+        self.pacman = pacman
     
     def seed_collision(self):
         if self.field.to_array()[self.pos_cell_x][self.pos_cell_y] == "." or self.field.to_array()[self.pos_cell_x][self.pos_cell_y] == "S":
             return True
         return False
             
-    def which_collision(self):
+    def which_collision(self,weight):
         if self.field.to_array()[self.pos_cell_x][self.pos_cell_y] == ".":
             print("DEBUG: съел зерно")
-
-        elif self.field.to_array()[self.pos_cell_x][self.pos_cell_y] == "S":
-            print("DEBUG: съел большое зерно")
-    
+            if weight == 10:
+                if not self.pacman.turn_to_blue:
+                    pr.play_sound(self.pacman.eating_corn_sound)
+            elif weight == 20:
+                if not self.pacman.turn_to_blue:
+                    pr.set_sound_volume(self.pacman.turn_to_blue_sound, self.pacman.sound_volume)
+                    self.pacman.turn_to_blue = True
+                    self.pacman.turn_to_blue_start = pr.get_time()
+                    self.pacman.turn_to_blue_end = self.pacman.turn_to_blue_start + 15
+                    pr.play_sound(self.pacman.turn_to_blue_sound)

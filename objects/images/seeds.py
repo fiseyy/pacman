@@ -30,7 +30,7 @@ class Seed:
         if not self.hidden:
             if pacman.pos_cell_x == self.pos_cell_x and pacman.pos_cell_y == self.pos_cell_y:
                 self.hide()
-                pacman.collision.which_collision()
+                pacman.collision.which_collision(self.weight)
                 score_counter.add(self.weight)
             
     def hide(self):

@@ -9,6 +9,9 @@ class Ghost:
         self.time_to_movement_since_start = time_to_movement_since_start
         self.field = field # предпологается, что поле не пустое
         self.spawned = False
+        self.died = False
+        self.afraid = False
+        self.died_time_end = None
         self.init_direction = direction # направление движения
         self.textures = textures # предпологается, что взят не весь кортеж текстур, а только нужного призрака
         self.spawn()
@@ -20,15 +23,26 @@ class Ghost:
         self.pos_y = spawn[1] * self.__cell_size # координата по вертикали (y)
         self.pos_cell_x = spawn[0] # номер клетки
         self.pos_cell_y = spawn[1]
+        self.spawn_cell_x = self.pos_cell_x
+        self.spawn_cell_y = self.pos_cell_y
         # ждать 5 сек
         self.spawn_time = pr.get_time()
-        self.movement = GhostMovement(self.pos_x, self.pos_y, self.pos_cell_x, self.pos_cell_y, self.init_direction, self.field) # направление движения
+        self.movement = GhostMovement(self.pos_x, self.pos_y, self.pos_cell_x, self.pos_cell_y, self.init_direction, self.field, self) # направление движения
         self.texture = None # текущая текстура в зависимости от направления
         self.changed_direction_on_crossroad = False
         self.teleported_to_portal = False
         self.spawned = True
     def update(self):
-        if self.spawned and (pr.get_time() - self.spawn_time >= self.time_to_movement_since_start):
+        if self.died_time_end != None:
+                self.goto(tuple((self.spawn_cell_x, self.spawn_cell_y)))
+                if self.died_time_end < pr.get_time():
+                    self.died_time_end = None
+                    self.died = False
+                    self.afraid = False
+        if self.afraid:
+            if not self.pacman.turn_to_blue:
+                self.afraid = False
+        if self.spawned and (pr.get_time() - self.spawn_time >= self.time_to_movement_since_start) and not self.died:
             # движение в зависимости от direction и свободных клеток слева/справа
             # print(self.direction.can_move(), self.direction.get_direction())  # DEBUG PRINT
             # print(self.movement.can_move(), self.movement.get_direction()) # DEBUG PRINT
@@ -97,16 +111,21 @@ class Ghost:
     def draw(self):
         if self.spawned:
             #взятие нужной модели
-            if self.movement.get_direction() == (1, 0):
-                self.texture = self.textures["right"]
-            elif self.movement.get_direction() == (-1, 0):
-                self.texture = self.textures["left"]
-            elif self.movement.get_direction() == (0, 1):
-                self.texture = self.textures["down"]
-            elif self.movement.get_direction() == (0, -1):
-                self.texture = self.textures["up"]
-            else:
-                self.texture = self.textures["right"]
+            if not self.afraid and not self.died:
+                if self.movement.get_direction() == (1, 0):
+                    self.texture = self.textures["right"]
+                elif self.movement.get_direction() == (-1, 0):
+                    self.texture = self.textures["left"]
+                elif self.movement.get_direction() == (0, 1):
+                    self.texture = self.textures["down"]
+                elif self.movement.get_direction() == (0, -1):
+                    self.texture = self.textures["up"]
+                else:
+                    self.texture = self.textures["right"]
+            elif self.died:
+                self.texture = self.textures["died"]
+            elif self.afraid:
+                self.texture = self.textures["afraid"]
             # отрисовка на нужной координате
             pr.draw_texture(self.texture, self.pos_x-2, self.pos_y-2, pr.WHITE)
     def goto(self,target_cell_pos: tuple):
@@ -123,13 +142,14 @@ class Ghost:
         self.movement.choose_new_direction()
         
 class GhostMovement:
-    def __init__(self, x, y, pos_cell_x, pos_cell_y, direction, field):
+    def __init__(self, x, y, pos_cell_x, pos_cell_y, direction, field, ghost):
         self.pos_x = x  # координата x
         self.pos_y = y # координата y
         self.pos_cell_x = pos_cell_x
         self.pos_cell_y = pos_cell_y
         self.direction = direction # кортеж
         self.field = field  # поле (с методом get_array() для получения двумерного массива)
+        self.ghost = ghost
     def set_direction_based_on_target(self, target_x, target_y):
         # Определяем направление к Пакману
         dx = target_x - self.pos_cell_x
@@ -148,9 +168,11 @@ class GhostMovement:
                 new_direction = (0, -1)  # Двигаться вверх
 
         # Проверяем, можем ли мы двигаться в этом направлении
-        if self.can_move(*new_direction):
+        if self.can_move(new_direction[0], new_direction[1]):
             self.set_direction(new_direction)
-
+    def is_moving(self)->bool:
+        return self.direction != (0, 0)
+    
     def choose_direction_away_from(self, target_x, target_y):
         # Определяем направление от Пакмана
         dx = self.pos_cell_x - target_x
@@ -187,8 +209,8 @@ class GhostMovement:
                     self.direction = possible_direction
         else:
             # for possible_direction in self.possible_directions:
-            #     if possible_direction == self.reverse_direction(self.previous_direction):
-            #         self.possible_directions.remove(possible_direction)
+                # if possible_direction == self.reverse_direction(self.previous_direction):
+                #     self.possible_directions.remove(possible_direction)
             print(self.possible_directions)
             self.direction = random.choice(self.possible_directions)
         return self.direction
@@ -213,9 +235,15 @@ class GhostMovement:
         return possible_directions
     def can_move(self, dx = None, dy = None):
         if dx is None:
-            dx = self.direction[0]
+            if not len(self.direction) == 0:
+                dx = self.direction[0]
+            else:
+                return False
         if dy is None:
-            dy = self.direction[1]
+            if not len(self.direction) == 0:
+                dy = self.direction[1]
+            else:
+                return False
         #print(self.field.to_array()[self.pos_cell_x + dx][self.pos_cell_y + dy])
         # Field.to_array() возвращает list с list'ами
         try:
@@ -237,5 +265,11 @@ class GhostMovement:
     def is_portal(self):
         return self.field.to_array()[self.pos_cell_x][self.pos_cell_y] == "T"
     def reverse_direction(self, direction):
-        return (-direction[0], -direction[1])
-    
+        if not len(direction) == 0:
+            return (-direction[0], -direction[1])
+        return (0,0)
+    def died(self):
+        if not self.ghost.died:
+            self.ghost.died = True
+            self.ghost.died_time_end = pr.get_time() + 10
+            self.ghost.draw()

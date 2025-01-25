@@ -1,7 +1,7 @@
 import pyray as pr
 from scenes.base import SceneBase
 from objects.cherry import Cherry
-from settings import BLACK_BACKGROUND, font, SCREEN_WIDTH, SCREEN_HEIGHT, FONT_SIZE, WHITE_TEXT
+from settings import BLACK_BACKGROUND, font, SCREEN_WIDTH, SCREEN_HEIGHT, FONT_SIZE, WHITE_TEXT, load_settings
 from objects.field import FieldDrawer
 from objects.textures import Textures
 from logic.field import Field
@@ -26,6 +26,13 @@ class GameScene(SceneBase):
         self.state = state
         self.x_to_center = 0
         self.y_to_center = 0
+        # подключение звуков
+        self.game_over_sound = pr.load_sound("sounds/game/game_over.mp3")
+        self.ghosts_moving_sound = pr.load_sound("sounds/game/ghosts_moving.mp3")
+        self.start_game_sound = pr.load_sound("sounds/game/start_game.mp3")
+        self.ghosts_moving_sound_playing = False  # Флаг для отслеживания воспроизведения звука
+        self.sound_start_time = 0  # Время начала воспроизведения звука
+
         self.textures = Textures()
         self.field = Field("objects/maps/field.txt")
         self.pacman = Pacman(1,1,cell_size, self.textures.get_texture("pacman"),self.field)
@@ -49,6 +56,8 @@ class GameScene(SceneBase):
         self.life_drawer = LifeDrawer(SCREEN_WIDTH - 100, SCREEN_HEIGHT - 25, self.textures.get_texture("life"))
         self.pacman_death = False
         self.death_time = None
+        self.start_time = pr.get_time()
+        pr.play_sound(self.start_game_sound)
         super().__init__()
     def debug_add_remove_score(self): # DEBUG METHOD
         if pr.is_key_pressed(pr.KEY_UP):
@@ -72,17 +81,33 @@ class GameScene(SceneBase):
         """
        Рисует игровую сцену.
         """
-        
-        pr.clear_background(BLACK_BACKGROUND)
-        #pr.draw_text_ex(font, "Game Scene", (SCREEN_WIDTH // 2 - 100, 5), FONT_SIZE, 1.0, WHITE_TEXT)
-        self.field_drawer.draw(self.x_to_center, self.y_to_center)
-        self.process_additional_logic()  # Обработка дополнительной логики
-        self.cherry.draw() # Рисуем Cherry
-        self.pacman.draw() # Рисуем Pacman
-        self.score_drawer.draw() # Рисуем очки
-        self.life_drawer.draw(self.life_counter.get_lives()) # Рисуем жизни
-        self.debug_add_remove_score() # на стрелочку вверх/вниз можно увеличивать / уменьшать очки (DEBUG FEATURE)
-        self.debug_add_remove_lifes() # на стрелочку влево/вправо можно увеличивать / уменьшать жизни (DEBUG FEATURE)
+        if pr.get_time() - self.start_time >= 4.5:
+            pr.clear_background(BLACK_BACKGROUND)
+            #pr.draw_text_ex(font, "Game Scene", (SCREEN_WIDTH // 2 - 100, 5), FONT_SIZE, 1.0, WHITE_TEXT)
+            self.field_drawer.draw(self.x_to_center, self.y_to_center)
+            self.process_additional_logic()  # Обработка дополнительной логики
+            self.cherry.draw() # Рисуем Cherry
+            self.pacman.draw() # Рисуем Pacman
+            self.score_drawer.draw() # Рисуем очки
+            self.life_drawer.draw(self.life_counter.get_lives()) # Рисуем жизни
+            self.debug_add_remove_score() # на стрелочку вверх/вниз можно увеличивать / уменьшать очки (DEBUG FEATURE)
+            self.debug_add_remove_lifes() # на стрелочку влево/вправо можно увеличивать / уменьшать жизни (DEBUG FEATURE)
+            self.clyde_ghost.draw()    # Рисуем Clyde
+            self.inky_ghost.draw()    # Рисуем Inky
+            self.blinky_ghost.draw()
+            self.pinky_ghost.draw()
+        else:
+            pr.clear_background(BLACK_BACKGROUND)
+            self.field_drawer.draw(self.x_to_center, self.y_to_center)
+            self.pacman.draw()
+            self.score_drawer.draw()
+            self.life_drawer.draw(self.life_counter.get_lives())
+            self.debug_add_remove_score()
+            self.debug_add_remove_lifes()
+            self.clyde_ghost.draw()    # Рисуем Clyde
+            self.inky_ghost.draw()    # Рисуем Inky
+            self.blinky_ghost.draw()
+            self.pinky_ghost.draw()
         
     def process_additional_logic(self):
     # Проверяем, не мертв ли Пакман
@@ -93,35 +118,82 @@ class GameScene(SceneBase):
 
             # Проверка столкновения с призраками
             if not self.pacman_death:
-                self.pacman_death = self.clyde_ghost.movement.check_collision_with_pacman(self.pacman)
+                if self.clyde_ghost.movement.check_collision_with_pacman(self.pacman):
+                    if self.pacman.turn_to_blue:
+                        self.clyde_ghost.movement.died()
+                    else:
+                        if self.clyde_ghost.spawn_time < pr.get_time():
+                            self.pacman_death = True
             self.clyde_ghost.update()  # Обновляем состояние Clyde
-            self.clyde_ghost.draw()    # Рисуем Clyde
 
             if not self.pacman_death:
-                self.pacman_death = self.inky_ghost.movement.check_collision_with_pacman(self.pacman)
+                if self.inky_ghost.movement.check_collision_with_pacman(self.pacman):
+                    if self.pacman.turn_to_blue:
+                        self.inky_ghost.movement.died()
+                    else:
+                        if self.clyde_ghost.spawn_time < pr.get_time():
+                            self.pacman_death = True
             self.inky_ghost.update()  # Обновляем состояние Inky
-            self.inky_ghost.draw()    # Рисуем Inky
-            if not self.pacman_death:
-                self.pacman_death = self.blinky_ghost.movement.check_collision_with_pacman(self.pacman)
-            self.blinky_ghost.update()
-            self.blinky_ghost.draw()
 
             if not self.pacman_death:
-                self.pacman_death = self.pinky_ghost.movement.check_collision_with_pacman(self.pacman)
+                if self.blinky_ghost.movement.check_collision_with_pacman(self.pacman):
+                    if self.pacman.turn_to_blue:
+                            self.blinky_ghost.movement.died()
+                    else:
+                            if self.clyde_ghost.spawn_time < pr.get_time():
+                                self.pacman_death = True
+            self.blinky_ghost.update()
+
+            if not self.pacman_death:
+                if self.pinky_ghost.movement.check_collision_with_pacman(self.pacman):
+                    if self.pacman.turn_to_blue:
+                            self.pinky_ghost.movement.died()
+                    else:
+                            if self.clyde_ghost.spawn_time < pr.get_time():
+                                self.pacman_death = True
             self.pinky_ghost.update()
-            self.pinky_ghost.draw()
 
             # Пакман
             self.pacman.define_direction()
             self.pacman.move()
 
+            if self.blinky_ghost.movement.is_moving() or self.clyde_ghost.movement.is_moving() or self.inky_ghost.movement.is_moving() or self.pinky_ghost.movement.is_moving():
+                if not self.pacman_death and not self.ghosts_moving_sound_playing:
+                    pr.play_sound(self.ghosts_moving_sound)
+                    self.ghosts_moving_sound_playing = True
+                    self.sound_start_time = pr.get_time()  # Запоминаем время начала воспроизведения
+            else:
+                self.ghosts_moving_sound_playing = False  # Если призраки не двигаются, сбрасываем флаг
+            # Проверяем, истекло ли время воспроизведения звука
+            if self.ghosts_moving_sound_playing and (pr.get_time() - self.sound_start_time >= 03.998):
+                self.ghosts_moving_sound_playing = False  # Сбрасываем флаг, если звук закончился
+
             if self.pacman_death:
+                pr.set_sound_volume(self.ghosts_moving_sound, 0)
+                pr.play_sound(self.game_over_sound)
                 self.life_counter.remove()
                 self.death_time = pr.get_time()
                 self.pacman.death_animation()
+            if self.pacman.turn_to_blue_start != None:
+                if self.pacman.turn_to_blue_end < pr.get_time():
+                    pr.set_sound_volume(self.pacman.turn_to_blue_sound, 0)
+                    self.pacman.turn_to_blue = False
+                elif pr.get_time() - self.pacman.turn_to_blue_start >= 4.83:
+                    pr.play_sound(self.pacman.turn_to_blue_sound)
+                    self.pacman.turn_to_blue_start = pr.get_time()
+                    self.blinky_ghost.afraid = True
+                    self.clyde_ghost.afraid = True
+                    self.inky_ghost.afraid = True
+                    self.pinky_ghost.afraid = True
+                else:
+                    self.blinky_ghost.afraid = True
+                    self.clyde_ghost.afraid = True
+                    self.inky_ghost.afraid = True
+                    self.pinky_ghost.afraid = True
 
         # Логика обработки смерти
         if self.death_time:
+            
             if self.death_time + 3 < pr.get_time():
                 if self.life_counter.get_lives() == 0:
                     # TODO: здесь сохранять результаты в таблицу рекордов

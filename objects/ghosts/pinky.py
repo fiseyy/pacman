@@ -10,26 +10,25 @@ class PinkyGhost(Ghost):
     def set_target(self):
         self.target_x = self.pacman.pos_cell_x
         self.target_y = self.pacman.pos_cell_y
-
+        if self.afraid:
+            self.target_x *= -1
+            self.target_y *= -1
     def define_target_direction(self):
+        res = tuple()
         if self.target_x > self.pos_cell_x:
-            return tuple((1,0))
+            res = tuple((1,0))
         elif self.target_x < self.pos_cell_x:
-            return tuple((-1,0))
+            res = tuple((-1,0))
         elif self.target_y > self.pos_cell_y:
-            return tuple((0,1))
+            res = tuple((0,1))
         elif self.target_y < self.pos_cell_y:
-            return tuple((0,-1))
-        else:
-            return tuple((0,0))
-        
+            res = tuple((0,-1))
+        return res
     def change_direction(self):
         self.set_target()
-        pacman_direction = self.pacman.movement.get_direction()
-        self.target_x = self.pacman.pos_cell_x + pacman_direction[0] * 4
-        self.target_y = self.pacman.pos_cell_y + pacman_direction[1] * 4
-
-        if not self.movement.can_move(self.define_target_direction()[0], self.define_target_direction()[1]):
+        # сторона, в которую надо идти
+        self.movement.set_direction(self.define_target_direction()) 
+        if not self.movement.can_move():
             self.movement.choose_new_direction()  # Если не можем двигаться к цели, выбираем новое направление
         else:
             self.movement.set_direction_based_on_target(self.target_x, self.target_y)

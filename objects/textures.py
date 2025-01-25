@@ -27,25 +27,33 @@ class Textures:
                "up": pr.load_texture_from_image(pr.load_image("images/ghosts/blinky/blinky_up_1.png")),
                "down": pr.load_texture_from_image(pr.load_image("images/ghosts/blinky/blinky_down_1.png")),
                "left": pr.load_texture_from_image(pr.load_image("images/ghosts/blinky/blinky_left_1.png")),
-               "right": pr.load_texture_from_image(pr.load_image("images/ghosts/blinky/blinky_right_1.png"))
+               "right": pr.load_texture_from_image(pr.load_image("images/ghosts/blinky/blinky_right_1.png")),
+               "afraid": pr.load_texture_from_image(pr.load_image("images/ghosts/afraid_1.png")),
+                "died": pr.load_texture_from_image(pr.load_image("images/ghosts/died_up.png")),
             },
            "clyde": {
                "up": pr.load_texture_from_image(pr.load_image("images/ghosts/clyde/clyde_up_1.png")),
                "down": pr.load_texture_from_image(pr.load_image("images/ghosts/clyde/clyde_down_1.png")),
                "left": pr.load_texture_from_image(pr.load_image("images/ghosts/clyde/clyde_left_1.png")),
-               "right": pr.load_texture_from_image(pr.load_image("images/ghosts/clyde/clyde_right_1.png"))
+               "right": pr.load_texture_from_image(pr.load_image("images/ghosts/clyde/clyde_right_1.png")),
+               "afraid": pr.load_texture_from_image(pr.load_image("images/ghosts/afraid_1.png")),
+                "died": pr.load_texture_from_image(pr.load_image("images/ghosts/died_up.png")),
             },
            "inky": {
                "up": pr.load_texture_from_image(pr.load_image("images/ghosts/inky/inky_up_1.png")),
                "down": pr.load_texture_from_image(pr.load_image("images/ghosts/inky/inky_down_1.png")),
                "left": pr.load_texture_from_image(pr.load_image("images/ghosts/inky/inky_left_1.png")),
-               "right": pr.load_texture_from_image(pr.load_image("images/ghosts/inky/inky_right_1.png"))
+               "right": pr.load_texture_from_image(pr.load_image("images/ghosts/inky/inky_right_1.png")),
+               "afraid": pr.load_texture_from_image(pr.load_image("images/ghosts/afraid_1.png")),
+                "died": pr.load_texture_from_image(pr.load_image("images/ghosts/died_up.png")),
             },
            "pinky": {
                "up": pr.load_texture_from_image(pr.load_image("images/ghosts/pinky/pinky_up_1.png")),
                "down": pr.load_texture_from_image(pr.load_image("images/ghosts/pinky/pinky_down_1.png")),
                "left": pr.load_texture_from_image(pr.load_image("images/ghosts/pinky/pinky_left_1.png")),
-               "right": pr.load_texture_from_image(pr.load_image("images/ghosts/pinky/pinky_right_1.png"))
+               "right": pr.load_texture_from_image(pr.load_image("images/ghosts/pinky/pinky_right_1.png")),
+               "afraid": pr.load_texture_from_image(pr.load_image("images/ghosts/afraid_1.png")),
+                "died": pr.load_texture_from_image(pr.load_image("images/ghosts/died_up.png")),
             },
             "pacman": {
                 "up": pr.load_texture_from_image(pr.load_image("images/pacman/pacman_up_1.png")),
