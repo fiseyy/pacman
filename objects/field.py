@@ -2,6 +2,7 @@ from logic.field import Field
 import pyray as pr
 from objects.textures import Textures
 from objects.images.seeds import Seed
+from objects.images.pacman import Pacman
 
 class FieldDrawer:
     """
@@ -14,7 +15,7 @@ class FieldDrawer:
         seeds (list): Список объектов Seed для хранения зёрен.
     """
 
-    def __init__(self, field: Field, cell_size):
+    def __init__(self, field: Field, cell_size, pacman):
         """
         Инициализирует объект класса FieldDrawer.
 
@@ -26,15 +27,15 @@ class FieldDrawer:
         self.cell_size = cell_size
         self.textures = Textures()
         self.seeds = []  # Список для хранения объектов Seed
-
+        self.pacman = pacman
         # Создаем зёрна и добавляем их в список
         for y, row in enumerate(self.field):
             for x, cell in enumerate(row):
                 if cell == '.':
-                    seed = Seed(x, y, self.cell_size, self.textures.get_texture("seed"),weight=10)
+                    seed = Seed(x, y, self.cell_size, self.textures.get_texture("seed"), self.pacman, weight=10)
                     self.seeds.append(seed)
                 elif cell == 'S':
-                    seed = Seed(x, y, self.cell_size, self.textures.get_texture("energizer"),weight=20)
+                    seed = Seed(x, y, self.cell_size, self.textures.get_texture("energizer"), self.pacman, weight=20)
                     self.seeds.append(seed)
 
     def draw(self, x_to_center=0, y_to_center=0):
