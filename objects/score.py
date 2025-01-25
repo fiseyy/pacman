@@ -1,7 +1,7 @@
 import pyray as pr
 
 class RecalculableText:
-    def __init__(self, font_size=36):
+    def __init__(self, font_size=20):
         """Базовый класс для отображения изменяемого текста."""
         self.font_size = font_size
 

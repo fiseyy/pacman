@@ -56,7 +56,8 @@ class Textures:
                 "down_alt": pr.load_texture_from_image(pr.load_image("images/pacman/pacman_down_2.png")),
                 "left_alt": pr.load_texture_from_image(pr.load_image("images/pacman/pacman_left_2.png")),
                 "right_alt": pr.load_texture_from_image(pr.load_image("images/pacman/pacman_right_2.png"))
-            }
+            },
+            "life": pr.load_texture_from_image(pr.load_image("images/heart.png"))
        }
 
    def get_texture(self, texture_name):

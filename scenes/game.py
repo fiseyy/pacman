@@ -29,15 +29,20 @@ class GameScene(SceneBase):
         self.inky_ghost = InkyGhost(x=1, y=1,cell_size=cell_size, field=self.field,textures=self.textures)
         self.cherry=Cherry(1,2,5,cell_size)
         self.score_counter = ScoreCounter(initial_score=0)
-        self.score_drawer = ScoreDrawer(SCREEN_WIDTH - 250, 10, self.score_counter)
+        self.score_drawer = ScoreDrawer(SCREEN_WIDTH - 145, 10, self.score_counter)
         self.life_counter = LifeCounter()
-        self.life_drawer = LifeDrawer(SCREEN_WIDTH - 250, 60, self.life_counter)
+        self.life_drawer = LifeDrawer(SCREEN_WIDTH - 100, SCREEN_HEIGHT - 25, self.textures.get_texture("life"))
         super().__init__()
-    def debug_add_remove_score(self):
+    def debug_add_remove_score(self): # DEBUG METHOD
         if pr.is_key_pressed(pr.KEY_UP):
             self.score_counter.add(10)
         elif pr.is_key_pressed(pr.KEY_DOWN):
             self.score_counter.remove(5)
+    def debug_add_remove_lifes(self): # DEBUG METHOD
+        if pr.is_key_pressed(pr.KeyboardKey.KEY_RIGHT):
+            self.life_counter.add()
+        elif pr.is_key_pressed(pr.KeyboardKey.KEY_LEFT):
+            self.life_counter.remove()
     def enter(self):
         """
        Входит в игровую сцену.
@@ -58,8 +63,9 @@ class GameScene(SceneBase):
         self.cherry.draw() # Рисуем Cherry
         self.pacman.draw() # Рисуем Pacman
         self.score_drawer.draw() # Рисуем очки
-        self.life_drawer.draw() # Рисуем жизни
+        self.life_drawer.draw(self.life_counter.get_lives()) # Рисуем жизни
         self.debug_add_remove_score() # на стрелочку вверх/вниз можно увеличивать / уменьшать очки (DEBUG FEATURE)
+        self.debug_add_remove_lifes() # на стрелочку влево/вправо можно увеличивать / уменьшать жизни (DEBUG FEATURE)
         
     def process_additional_logic(self):
         # self.inky_ghost.change_direction(self.field)
