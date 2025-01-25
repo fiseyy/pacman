@@ -9,6 +9,8 @@ from objects.ghosts.inky import InkyGhost
 from objects.images.pacman import Pacman
 from objects.score import ScoreDrawer
 from logic.score import ScoreCounter
+from logic.life import LifeCounter
+from objects.life import LifeDrawer
 class GameScene(SceneBase):
     """
    Класс для игровой сцены.
@@ -28,6 +30,8 @@ class GameScene(SceneBase):
         self.cherry=Cherry(1,2,5,cell_size)
         self.score_counter = ScoreCounter(initial_score=0)
         self.score_drawer = ScoreDrawer(SCREEN_WIDTH - 250, 10, self.score_counter)
+        self.life_counter = LifeCounter()
+        self.life_drawer = LifeDrawer(SCREEN_WIDTH - 250, 60, self.life_counter)
         super().__init__()
     def debug_add_remove_score(self):
         if pr.is_key_pressed(pr.KEY_UP):
@@ -54,6 +58,7 @@ class GameScene(SceneBase):
         self.cherry.draw() # Рисуем Cherry
         self.pacman.draw() # Рисуем Pacman
         self.score_drawer.draw() # Рисуем очки
+        self.life_drawer.draw() # Рисуем жизни
         self.debug_add_remove_score() # на стрелочку вверх/вниз можно увеличивать / уменьшать очки (DEBUG FEATURE)
         
     def process_additional_logic(self):
