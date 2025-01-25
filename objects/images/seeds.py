@@ -27,10 +27,11 @@ class Seed:
             pr.draw_texture(self.texture, self.x, self.y, pr.WHITE)
             
     def collisions(self,pacman: Pacman, score_counter: ScoreCounter):
-        if pacman.pos_cell_x == self.pos_cell_x and pacman.pos_cell_y == self.pos_cell_y:
-            self.hide()
-            pacman.collision.which_collision()
-            score_counter.add(self.weight)
+        if not self.hidden:
+            if pacman.pos_cell_x == self.pos_cell_x and pacman.pos_cell_y == self.pos_cell_y:
+                self.hide()
+                pacman.collision.which_collision()
+                score_counter.add(self.weight)
             
     def hide(self):
         self.hidden = True
