@@ -36,7 +36,8 @@ class FieldDrawer:
                 elif cell == 'S':
                     seed = Seed(x, y, self.cell_size, self.textures.get_texture("energizer"), weight=20)
                     self.seeds.append(seed)
-
+    def get_seeds(self) -> list:
+        return self.seeds
     def draw(self, x_to_center=0, y_to_center=0):
         """
         Рисует поле.
@@ -56,5 +57,8 @@ class FieldDrawer:
                         seed.draw()
                 elif cell == 'T':
                     pr.draw_rectangle(x_to_center + x * self.cell_size, y_to_center + y * self.cell_size, self.cell_size, self.cell_size, pr.YELLOW)
-
+                elif cell == 'G':
+                    pr.draw_rectangle(x_to_center + x * self.cell_size, y_to_center + y * self.cell_size, self.cell_size, self.cell_size, pr.BLACK)  # Пустые ячейки для спавна призраков
+                elif cell == 'Z':
+                    pr.draw_rectangle(x_to_center + x * self.cell_size, y_to_center + y * self.cell_size, self.cell_size, self.cell_size, pr.BLACK)  # Пустые ячейчи, куда призраки не ходят
     

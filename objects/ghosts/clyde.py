@@ -1,13 +1,33 @@
-from base import Ghost
+from objects.ghosts.base import Ghost
 # Класс для оранжевого привидения (Clyde)
 class ClydeGhost(Ghost):
-    def change_direction(self, field):
-        # Clyde меняет стратегию в зависимости от расстояния до Пакмана
-        if self.dx == 0 and self.dy == 0:
-            distance_to_pacman = ((self.__x - field.target_x) ** 2 + (self.__y - field.target_y) ** 2) ** 0.5
-            if distance_to_pacman > 8:
-                # Если далеко, то преследует Пакмана
-                self.set_direction_based_on_target(field.target_x, field.target_y)
+    def __init__(self, x=0, y=0, cell_size=10, field=None, textures=None, pacman=None):
+        time_to_movement_since_start = 5
+        self.pacman = pacman
+        super().__init__(x, y, cell_size=cell_size, field=field, textures=textures.get_texture("clyde"), time_to_movement_since_start=time_to_movement_since_start)
+
+    def set_target(self):
+        self.target_x = self.pacman.pos_cell_x
+        self.target_y = self.pacman.pos_cell_y
+
+    def define_target_direction(self):
+        if self.target_x > self.pos_cell_x:
+            return tuple((1,0))
+        elif self.target_x < self.pos_cell_x:
+            return tuple((-1,0))
+        elif self.target_y > self.pos_cell_y:
+            return tuple((0,1))
+        elif self.target_y < self.pos_cell_y:
+            return tuple((0,-1))
+        else:
+            return tuple((0,0))
+    def change_direction(self):
+        self.set_target()
+        distance_to_pacman = ((self.pos_cell_x - self.target_x) ** 2 + (self.pos_cell_y - self.target_y) ** 2) ** 0.5
+        if distance_to_pacman > 8:
+            if not self.movement.can_move(self.define_target_direction()[0], self.define_target_direction()[1]):
+                self.movement.choose_new_direction()  # Если не можем двигаться к цели, выбираем новое направление
             else:
-                # Если близко, то убегает
-                self.choose_direction_away_from(field.target_x, field.target_y)
+                self.movement.set_direction_based_on_target(self.target_x, self.target_y)
+        else:
+            self.movement.choose_direction_away_from(self.target_x, self.target_y)

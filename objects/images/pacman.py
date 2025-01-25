@@ -57,6 +57,7 @@ class Pacman():
        self.animation_frame = 0  # Текущий кадр анимации
        self.animation_duration = 0.3  # Длительность одного кадра анимации (в секундах)
        self.collision = PacmanCollision(self.pos_cell_x, self.pos_cell_y, self.field)
+       self.is_dead = False
 
    def draw(self):
        """
@@ -70,63 +71,97 @@ class Pacman():
        Аргументы:
            pacman_direction (tuple): направление движения
        """
-       current_time = pr.get_time()  # Получаем текущее время в секундах
-       frame = int(current_time / self.animation_duration) % 2
-       if pacman_direction == (0, -1):  # Движение вверх
-           if frame == 0:
-               self.texture = self.textures["up"]
-           else:
-               if self.movement.can_move():
-                   self.texture = self.textures["up_alt"]
-       elif pacman_direction == (0, 1):  # Движение вниз
-           if frame == 0:
-               self.texture = self.textures["down"]
-           else:
-               if self.movement.can_move():
-                   self.texture = self.textures["down_alt"]
-       elif pacman_direction == (-1, 0):  # Движение влево
-           if frame == 0:
-               self.texture = self.textures["left"]
-           else:
-               if self.movement.can_move():
-                   self.texture = self.textures["left_alt"]
-       elif pacman_direction == (1, 0):  # Движение вправо
-           if frame == 0:
-               self.texture = self.textures["right"]
-           else:
-               if self.movement.can_move():
-                   self.texture = self.textures["right_alt"]
+       if not self.is_dead:
+        current_time = pr.get_time()  # Получаем текущее время в секундах
+        frame = int(current_time / self.animation_duration) % 2
+        if pacman_direction == (0, -1):  # Движение вверх
+            if frame == 0:
+                self.texture = self.textures["up"]
+            else:
+                if self.movement.can_move():
+                    self.texture = self.textures["up_alt"]
+        elif pacman_direction == (0, 1):  # Движение вниз
+            if frame == 0:
+                self.texture = self.textures["down"]
+            else:
+                if self.movement.can_move():
+                    self.texture = self.textures["down_alt"]
+        elif pacman_direction == (-1, 0):  # Движение влево
+            if frame == 0:
+                self.texture = self.textures["left"]
+            else:
+                if self.movement.can_move():
+                    self.texture = self.textures["left_alt"]
+        elif pacman_direction == (1, 0):  # Движение вправо
+            if frame == 0:
+                self.texture = self.textures["right"]
+            else:
+                if self.movement.can_move():
+                    self.texture = self.textures["right_alt"]
+   def death_animation(self):
+        """Анимация смерти пакмана"""
+        if not self.is_dead:
+            self.is_dead = True
+            self.death_start_time = pr.get_time()  # Сохраняем время начала анимации
+
+        if self.is_dead:
+            self.death_duration = 0.2
+            self.max_death_frames = 10
+            current_time = pr.get_time()  # Получаем текущее время в секундах
+            elapsed_time = current_time - self.death_start_time  # Время, прошедшее с начала анимации
+            frame = int(elapsed_time / self.death_duration)  # Определяем текущий кадр
+            if frame < self.max_death_frames:
+                self.texture = self.textures[f"death_{frame+1}"]  # Устанавливаем текстуру
+            else:
+                # Завершаем анимацию, устанавливаем финальную текстуру
+                self.texture = self.textures["death_11"]  # Установите финальную текстуру
+                #
+   def death_animation_drawer(self):
+    """Отрисовка анимации смерти пакмана"""
+    if self.is_dead and not self.texture == self.textures["death_11"]:
+        current_time = pr.get_time()  # Получаем текущее время в секундах
+        elapsed_time = current_time - self.death_start_time  # Время, прошедшее с начала анимации
+        frame = int(elapsed_time / self.death_duration)  # Определяем текущий кадр
+
+        if frame < self.max_death_frames:
+            self.texture = self.textures[f"death_{frame + 1}"]  # Устанавливаем текстуру
+        else:
+            self.texture = self.textures["death_11"]  # Устанавливаем финальную текстуру
+            
+
+        # Отрисовка Пакмана с текущей текстурой
+        pr.draw_texture(self.texture, self.pos_x, self.pos_y, pr.WHITE)
    def move(self):
        """
        Передвигает пакмана в 4х направлениях.
        """
        # print(f"future {self.future_direction}, direction {self.movement.direction}") # DEBUG
+       if not self.is_dead:
+        if self.future_direction:
+            if self.movement.can_move(self.future_direction) and self.pos_x % self.__cell_size == 0 and self.pos_y % self.__cell_size == 0 and not self.future_direction == self.movement.reverse_direction(self.movement.direction):
+                self.movement.set_direction(self.future_direction)
+            elif self.future_direction == self.movement.reverse_direction(self.movement.direction):
+                self.movement.set_direction(self.future_direction)
+        self.texture_animation(self.movement.direction)
+        if self.movement.can_move():
+            self.pos_x += self.movement.get_direction()[0] * self.speed
+            self.pos_y += self.movement.get_direction()[1] * self.speed
 
-       if self.future_direction:
-           if self.movement.can_move(self.future_direction) and self.pos_x % self.__cell_size == 0 and self.pos_y % self.__cell_size == 0 and not self.future_direction == self.movement.reverse_direction(self.movement.direction):
-               self.movement.set_direction(self.future_direction)
-           elif self.future_direction == self.movement.reverse_direction(self.movement.direction):
-               self.movement.set_direction(self.future_direction)
-       self.texture_animation(self.movement.direction)
-       if self.movement.can_move():
-           self.pos_x += self.movement.get_direction()[0] * self.speed
-           self.pos_y += self.movement.get_direction()[1] * self.speed
+            if self.pos_x / self.__cell_size % 1 == 0 and self.pos_y / self.__cell_size % 1 == 0:
+                self.pos_cell_x = int(self.pos_x / self.__cell_size)
+                self.pos_cell_y = int(self.pos_y / self.__cell_size)
+                self.movement.pos_cell_x = self.pos_cell_x
+                self.movement.pos_cell_y = self.pos_cell_y
 
-           if self.pos_x / self.__cell_size % 1 == 0 and self.pos_y / self.__cell_size % 1 == 0:
-               self.pos_cell_x = int(self.pos_x / self.__cell_size)
-               self.pos_cell_y = int(self.pos_y / self.__cell_size)
-               self.movement.pos_cell_x = self.pos_cell_x
-               self.movement.pos_cell_y = self.pos_cell_y
-
-       if self.movement.is_portal():
-           if not self.teleported_to_portal:
-               portal_positions = self.movement.get_portal_positions()
-               portal_positions.remove((self.pos_cell_x, self.pos_cell_y))  # Удаляем текущую позицию
-               if portal_positions:  # Проверяем, есть ли доступные порталы
-                   self.goto(portal_positions[0])  # Перемещаемся на первый доступный портал
-                   self.teleported_to_portal = True
-       else:
-           self.teleported_to_portal = False  # Сбрасываем флаг, если не на портале
+        if self.movement.is_portal():
+            if not self.teleported_to_portal:
+                portal_positions = self.movement.get_portal_positions()
+                portal_positions.remove((self.pos_cell_x, self.pos_cell_y))  # Удаляем текущую позицию
+                if portal_positions:  # Проверяем, есть ли доступные порталы
+                    self.goto(portal_positions[0])  # Перемещаемся на первый доступный портал
+                    self.teleported_to_portal = True
+        else:
+            self.teleported_to_portal = False  # Сбрасываем флаг, если не на портале
 
    def goto(self, target_cell_pos: tuple):
        """
@@ -135,31 +170,33 @@ class Pacman():
        Аргументы:
            target_cell_pos (tuple): Целевая позиция.
        """
-       target_cell_x, target_cell_y = target_cell_pos
-       self.pos_cell_x = target_cell_x
-       self.pos_cell_y = target_cell_y
-       self.pos_x = self.pos_cell_x * self.__cell_size
-       self.pos_y = self.pos_cell_y * self.__cell_size
-       self.movement.pos_cell_x = self.pos_cell_x
-       self.movement.pos_cell_y = self.pos_cell_y
+       if not self.is_dead:
+        target_cell_x, target_cell_y = target_cell_pos
+        self.pos_cell_x = target_cell_x
+        self.pos_cell_y = target_cell_y
+        self.pos_x = self.pos_cell_x * self.__cell_size
+        self.pos_y = self.pos_cell_y * self.__cell_size
+        self.movement.pos_cell_x = self.pos_cell_x
+        self.movement.pos_cell_y = self.pos_cell_y
 
    def define_direction(self):
        """
        Определяет направление движения клавишами WASD.
        """
-       current_direction = self.movement.get_direction()
+       if not self.is_dead:
+        current_direction = self.movement.get_direction()
 
-       if pr.is_key_down(pr.KeyboardKey.KEY_W) or pr.is_key_pressed(pr.KeyboardKey.KEY_W):  # Движение вверх
-           self.future_direction = (0, -1)
+        if pr.is_key_down(pr.KeyboardKey.KEY_W) or pr.is_key_pressed(pr.KeyboardKey.KEY_W):  # Движение вверх
+            self.future_direction = (0, -1)
 
-       elif pr.is_key_down(pr.KeyboardKey.KEY_S) or pr.is_key_pressed(pr.KeyboardKey.KEY_S):  # Движение вниз
-           self.future_direction = (0, 1)
+        elif pr.is_key_down(pr.KeyboardKey.KEY_S) or pr.is_key_pressed(pr.KeyboardKey.KEY_S):  # Движение вниз
+            self.future_direction = (0, 1)
 
-       elif pr.is_key_down(pr.KeyboardKey.KEY_A) or pr.is_key_pressed(pr.KeyboardKey.KEY_A):  # Движение влево
-           self.future_direction = (-1, 0)
+        elif pr.is_key_down(pr.KeyboardKey.KEY_A) or pr.is_key_pressed(pr.KeyboardKey.KEY_A):  # Движение влево
+            self.future_direction = (-1, 0)
 
-       elif pr.is_key_down(pr.KeyboardKey.KEY_D) or pr.is_key_pressed(pr.KeyboardKey.KEY_D):  # Движение вправо
-           self.future_direction = (1, 0)
+        elif pr.is_key_down(pr.KeyboardKey.KEY_D) or pr.is_key_pressed(pr.KeyboardKey.KEY_D):  # Движение вправо
+            self.future_direction = (1, 0)
 
    def can_turn(self, new_direction):
        """
@@ -171,16 +208,17 @@ class Pacman():
        Возвращает:
            bool: True, если пакман может повернуть в новое направление, иначе False.
        """
-       new_pos_x = self.pos_cell_x + new_direction[0]
-       new_pos_y = self.pos_cell_y + new_direction[1]
+       if not self.is_dead:
+        new_pos_x = self.pos_cell_x + new_direction[0]
+        new_pos_y = self.pos_cell_y + new_direction[1]
 
-       if new_pos_x < 0 or new_pos_x >= len(self.field.to_array()[0]) or new_pos_y < 0 or new_pos_y >= len(self.field.to_array()):
-           return False  # Если новая позиция выходит за границы, поворот невозможен
+        if new_pos_x < 0 or new_pos_x >= len(self.field.to_array()[0]) or new_pos_y < 0 or new_pos_y >= len(self.field.to_array()):
+            return False  # Если новая позиция выходит за границы, поворот невозможен
 
-       if self.field.to_array()[new_pos_y][new_pos_x] == "#":
-           return False  # Если есть коллизия, поворот невозможен
+        if self.field.to_array()[new_pos_y][new_pos_x] == "#":
+            return False  # Если есть коллизия, поворот невозможен
 
-       return True
+        return True
 
 class PacmanMovement:
    """

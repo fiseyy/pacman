@@ -10,7 +10,6 @@ class MenuScene(SceneBase):
         self.sound_stream = None
     def enter(self):
         print("Entering Menu Scene")
-        pr.init_audio_device()
         self.main_menu_music = pr.load_music_stream("sounds/main_menu.mp3")
         self.button_click_sound = pr.load_sound("sounds/ui/button_clicked.mp3")
         self.start_game_sound = pr.load_sound("sounds/ui/start_game.mp3")
@@ -42,8 +41,13 @@ class MenuScene(SceneBase):
         draw_button("Play", SCREEN_WIDTH // 2 - 100, SCREEN_HEIGHT // 2 - 50, BUTTON_WIDTH, BUTTON_HEIGHT, FONT_SIZE, lambda: self.start_game_clicked())
         draw_button("Records", SCREEN_WIDTH // 2 - 100, SCREEN_HEIGHT // 2, BUTTON_WIDTH, BUTTON_HEIGHT, FONT_SIZE, lambda: self.button_clicked("records"))
         draw_button("Settings", SCREEN_WIDTH // 2 - 100, SCREEN_HEIGHT // 2 + 50, BUTTON_WIDTH, BUTTON_HEIGHT, FONT_SIZE, lambda: self.button_clicked("settings"))
-        draw_button("Exit", SCREEN_WIDTH // 2 - 100, SCREEN_HEIGHT // 2 + 100, BUTTON_WIDTH, BUTTON_HEIGHT, FONT_SIZE, on_click=lambda: pr.close_window())
+        draw_button("Exit", SCREEN_WIDTH // 2 - 100, SCREEN_HEIGHT // 2 + 100, BUTTON_WIDTH, BUTTON_HEIGHT, FONT_SIZE, on_click=lambda: self.exit_game())
     def exit(self):
         pr.stop_music_stream(self.main_menu_music)  # Остановка музыки при выходе
         pr.unload_music_stream(self.main_menu_music)  # Освобождение ресурсов
+        pr.unload_sound(self.button_click_sound)
+        pr.unload_sound(self.start_game_sound)
+    def exit_game(self):
+        self.exit()
         pr.close_audio_device()
+        pr.close_window()

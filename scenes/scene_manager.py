@@ -4,10 +4,13 @@ from scenes.pause import PauseScene
 from scenes.game import GameScene
 from scenes.records import RecordsScene
 from scenes.settings import SettingsScene
+from scenes.game_over import GameOverScene
+from settings import CELL_SIZE
 import pyray as pr
 # scene_manager.py
 class GameState:
     def __init__(self):
+        pr.init_audio_device()
         self.current_scene = None  # Изначально нет текущей сцены
         self.change_scene("menu")  # Переход в меню
 
@@ -19,7 +22,7 @@ class GameState:
         if new_scene == "menu":
             self.current_scene = MenuScene(self)
         elif new_scene == "game":
-            self.current_scene = GameScene(18)
+            self.current_scene = GameScene(self,CELL_SIZE, None, None)
         elif new_scene == "pause":
             self.current_scene = PauseScene()
         elif new_scene == "records":
@@ -27,7 +30,13 @@ class GameState:
         elif new_scene == "settings":
             self.current_scene = SettingsScene(self)
         self.current_scene.enter()  # Входим в новую сцену
-
+    def restart_game(self, lifes_counter = None, score_counter = None):
+        self.current_scene.exit()
+        self.current_scene = GameScene(self,CELL_SIZE, lifes_counter, score_counter)
+    def game_over(self,score):
+        self.current_scene.exit()
+        self.current_scene = GameOverScene(self)
+        self.current_scene.enter(score)
 # Создаем объект состояния игры
 state = GameState()
       

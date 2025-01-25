@@ -1,6 +1,26 @@
+class GhostSpawners:
+    def reset(self):
+        self.ghost_spawners = []
+        for y in range(len(self.field)):
+            for x in range(len(self.field[y])):
+                if self.field[y][x] == 'G':
+                    self.ghost_spawners.append((x, y))
+        self.free_ghost_spawners = self.ghost_spawners.copy()
+    def __init__(self, field):
+        self.field = field
+        self.reset()
+    def get_free_spawn_locations(self):
+        return self.free_ghost_spawners
+    def occupy_spawn_location(self, location):
+        if location in self.free_ghost_spawners:
+            self.free_ghost_spawners.remove(location)
+            return True
+        return False
+
 class Field:
     def __init__(self, file_path):
         self.field = self.load_field(file_path)
+        self.ghost_spawners = GhostSpawners(self.to_array())
         self.file_path = file_path
     
     def load_field(self, file_path=""):

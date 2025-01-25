@@ -1,10 +1,35 @@
-from base import Ghost
+from objects.ghosts.base import Ghost
 
 # Класс для розового привидения (Pinky)
 class PinkyGhost(Ghost):
-    def change_direction(self, field):
-        # Pinky следует за Пакманом, но старается предвосхитить его движение
-        if self.dx == 0 and self.dy == 0:
-            # Например, Pinky может пытаться идти вперед на 4 клетки в направлении текущего движения Пакмана
-            self.set_direction_based_on_target(field.target_x + 4 * field.target_dx,
-                                               field.target_y + 4 * field.target_dy)
+    def __init__(self, x=0, y=0, cell_size=10, field=None, textures=None, pacman=None):
+        time_to_movement_since_start = 10
+        self.pacman = pacman
+        super().__init__(x, y, cell_size=cell_size, field=field, textures=textures.get_texture("pinky"), time_to_movement_since_start=time_to_movement_since_start)
+
+    def set_target(self):
+        self.target_x = self.pacman.pos_cell_x
+        self.target_y = self.pacman.pos_cell_y
+
+    def define_target_direction(self):
+        if self.target_x > self.pos_cell_x:
+            return tuple((1,0))
+        elif self.target_x < self.pos_cell_x:
+            return tuple((-1,0))
+        elif self.target_y > self.pos_cell_y:
+            return tuple((0,1))
+        elif self.target_y < self.pos_cell_y:
+            return tuple((0,-1))
+        else:
+            return tuple((0,0))
+        
+    def change_direction(self):
+        self.set_target()
+        pacman_direction = self.pacman.movement.get_direction()
+        self.target_x = self.pacman.pos_cell_x + pacman_direction[0] * 4
+        self.target_y = self.pacman.pos_cell_y + pacman_direction[1] * 4
+
+        if not self.movement.can_move(self.define_target_direction()[0], self.define_target_direction()[1]):
+            self.movement.choose_new_direction()  # Если не можем двигаться к цели, выбираем новое направление
+        else:
+            self.movement.set_direction_based_on_target(self.target_x, self.target_y)

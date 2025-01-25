@@ -9,6 +9,7 @@ RED_TEXT = (255, 0, 0, 255)  # Красный текст
 FONT_SIZE = 40  # Размер шрифта
 BUTTON_WIDTH = 200  # Ширина кнопки
 BUTTON_HEIGHT = 50  # Высота кнопки
+CELL_SIZE = 18 # Размер ячейки
 # Загрузка шрифта
 font = get_font_default()
 

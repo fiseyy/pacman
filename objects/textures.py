@@ -55,7 +55,18 @@ class Textures:
                 "up_alt": pr.load_texture_from_image(pr.load_image("images/pacman/pacman_up_2.png")),
                 "down_alt": pr.load_texture_from_image(pr.load_image("images/pacman/pacman_down_2.png")),
                 "left_alt": pr.load_texture_from_image(pr.load_image("images/pacman/pacman_left_2.png")),
-                "right_alt": pr.load_texture_from_image(pr.load_image("images/pacman/pacman_right_2.png"))
+                "right_alt": pr.load_texture_from_image(pr.load_image("images/pacman/pacman_right_2.png")),
+                "death_1": pr.load_texture_from_image(pr.load_image("images/pacman/death/pacman_death_1.png")),
+                "death_2": pr.load_texture_from_image(pr.load_image("images/pacman/death/pacman_death_2.png")),
+                "death_3": pr.load_texture_from_image(pr.load_image("images/pacman/death/pacman_death_3.png")),
+                "death_4": pr.load_texture_from_image(pr.load_image("images/pacman/death/pacman_death_4.png")),
+                "death_5": pr.load_texture_from_image(pr.load_image("images/pacman/death/pacman_death_5.png")),
+                "death_6": pr.load_texture_from_image(pr.load_image("images/pacman/death/pacman_death_6.png")),
+                "death_7": pr.load_texture_from_image(pr.load_image("images/pacman/death/pacman_death_7.png")),
+                "death_8": pr.load_texture_from_image(pr.load_image("images/pacman/death/pacman_death_8.png")),
+                "death_9": pr.load_texture_from_image(pr.load_image("images/pacman/death/pacman_death_9.png")),
+                "death_10": pr.load_texture_from_image(pr.load_image("images/pacman/death/pacman_death_10.png")),
+                "death_11": pr.load_texture_from_image(pr.load_image("images/pacman/death/pacman_death_11.png")),
             },
             "life": pr.load_texture_from_image(pr.load_image("images/heart.png"))
        }
