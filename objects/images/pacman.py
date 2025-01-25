@@ -42,7 +42,6 @@ class Pacman():
        """
         # подключение звуков
        self.eating_corn_sound = pr.load_sound("sounds/game/eating_corn.mp3")
-       self.eating_ghost_sound = pr.load_sound("sounds/game/eating_ghost.mp3")
        self.turn_to_blue_sound = pr.load_sound("sounds/game/turn_to_blue.mp3")
 
        
@@ -51,7 +50,6 @@ class Pacman():
 
        pr.set_sound_volume(self.eating_corn_sound, self.sound_volume)
        pr.set_sound_volume(self.turn_to_blue_sound, self.sound_volume)
-       pr.set_sound_volume(self.eating_ghost_sound, self.sound_volume)
 
 
        self.speed = 1  # скорость пакмана

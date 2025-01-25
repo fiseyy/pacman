@@ -31,6 +31,10 @@ class GameScene(SceneBase):
         self.ghosts_moving_sound = pr.load_sound("sounds/game/ghosts_moving.mp3")
         self.start_game_sound = pr.load_sound("sounds/game/start_game.mp3")
         self.eating_fruit_sound = pr.load_sound("sounds/game/eating_fruit.mp3")
+        self.eating_ghost_sound = pr.load_sound("sounds/game/eating_ghost.mp3")
+        
+        self.sound_ghost_eaten = False
+        
         # pr.set_sound_volume(self.eating_fruit_sound, 0.5)
         self.ghosts_moving_sound_playing = False  # Флаг для отслеживания воспроизведения звука
         self.sound_start_time = 0  # Время начала воспроизведения звука
@@ -124,24 +128,35 @@ class GameScene(SceneBase):
                 if self.clyde_ghost.movement.check_collision_with_pacman(self.pacman):
                     if self.pacman.turn_to_blue:
                         self.clyde_ghost.movement.died()
+                        if not self.sound_ghost_eaten:
+                            self.sound_ghost_eaten = True
+                            pr.play_sound(self.eating_ghost_sound)
                     else:
                         if self.clyde_ghost.spawn_time < pr.get_time():
                             self.pacman_death = True
+
             self.clyde_ghost.update()  # Обновляем состояние Clyde
 
             if not self.pacman_death:
                 if self.inky_ghost.movement.check_collision_with_pacman(self.pacman):
                     if self.pacman.turn_to_blue:
                         self.inky_ghost.movement.died()
+                        if not self.sound_ghost_eaten:
+                            self.sound_ghost_eaten = True
+                            pr.play_sound(self.eating_ghost_sound)
                     else:
                         if self.clyde_ghost.spawn_time < pr.get_time():
                             self.pacman_death = True
+
             self.inky_ghost.update()  # Обновляем состояние Inky
 
             if not self.pacman_death:
                 if self.blinky_ghost.movement.check_collision_with_pacman(self.pacman):
                     if self.pacman.turn_to_blue:
-                            self.blinky_ghost.movement.died()
+                        self.blinky_ghost.movement.died()
+                        if not self.sound_ghost_eaten:
+                            self.sound_ghost_eaten = True
+                            pr.play_sound(self.eating_ghost_sound)
                     else:
                             if self.clyde_ghost.spawn_time < pr.get_time():
                                 self.pacman_death = True
@@ -150,12 +165,18 @@ class GameScene(SceneBase):
             if not self.pacman_death:
                 if self.pinky_ghost.movement.check_collision_with_pacman(self.pacman):
                     if self.pacman.turn_to_blue:
-                            self.pinky_ghost.movement.died()
+                        self.pinky_ghost.movement.died()
+                        if not self.sound_ghost_eaten:
+                            self.sound_ghost_eaten = True
+                            pr.play_sound(self.eating_ghost_sound)
                     else:
                             if self.clyde_ghost.spawn_time < pr.get_time():
                                 self.pacman_death = True
             self.pinky_ghost.update()
-
+            
+            # если ни с одним призраком нет столкновений, то self.sound_ghost_eaten = False
+            if self.sound_ghost_eaten and not self.clyde_ghost.movement.check_collision_with_pacman(self.pacman) and not self.blinky_ghost.movement.check_collision_with_pacman(self.pacman) and not self.inky_ghost.movement.check_collision_with_pacman(self.pacman) and not self.pinky_ghost.movement.check_collision_with_pacman(self.pacman):
+                self.sound_ghost_eaten = False
             # Пакман
             self.pacman.define_direction()
             self.pacman.move()
