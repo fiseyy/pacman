@@ -30,6 +30,8 @@ class GameScene(SceneBase):
         self.game_over_sound = pr.load_sound("sounds/game/game_over.mp3")
         self.ghosts_moving_sound = pr.load_sound("sounds/game/ghosts_moving.mp3")
         self.start_game_sound = pr.load_sound("sounds/game/start_game.mp3")
+        self.eating_fruit_sound = pr.load_sound("sounds/game/eating_fruit.mp3")
+        # pr.set_sound_volume(self.eating_fruit_sound, 0.5)
         self.ghosts_moving_sound_playing = False  # Флаг для отслеживания воспроизведения звука
         self.sound_start_time = 0  # Время начала воспроизведения звука
 
@@ -41,7 +43,8 @@ class GameScene(SceneBase):
         self.pinky_ghost = PinkyGhost(x=14, y=14,cell_size=cell_size, field=self.field,textures=self.textures, pacman=self.pacman)
         self.clyde_ghost = ClydeGhost(x=14, y=14,cell_size=cell_size, field=self.field,textures=self.textures, pacman=self.pacman)
         self.inky_ghost = InkyGhost(x=14, y=14,cell_size=cell_size, field=self.field,textures=self.textures, pacman=self.pacman)
-        self.cherry=Cherry(1,2,5,cell_size)
+        self.cherry=Cherry(1,3,5,cell_size, self.textures.get_texture("cherry"))
+        self.cherry_eaten = False
         if not life_counter:
             self.life_counter = LifeCounter(initial_lives=3)
         else:
@@ -157,6 +160,16 @@ class GameScene(SceneBase):
             self.pacman.define_direction()
             self.pacman.move()
 
+            # пакман и вишня
+            if self.cherry.collision(self.pacman):
+                if not self.cherry_eaten:
+                    self.cherry.hide()
+                    self.score_counter.add(100)
+                    self.cherry_eaten = True
+                    pr.play_sound(self.eating_fruit_sound)
+            else:
+                self.cherry_eaten = False
+            
             if self.blinky_ghost.movement.is_moving() or self.clyde_ghost.movement.is_moving() or self.inky_ghost.movement.is_moving() or self.pinky_ghost.movement.is_moving():
                 if not self.pacman_death and not self.ghosts_moving_sound_playing:
                     pr.play_sound(self.ghosts_moving_sound)

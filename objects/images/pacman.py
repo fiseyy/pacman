@@ -44,7 +44,7 @@ class Pacman():
        self.eating_corn_sound = pr.load_sound("sounds/game/eating_corn.mp3")
        self.eating_ghost_sound = pr.load_sound("sounds/game/eating_ghost.mp3")
        self.turn_to_blue_sound = pr.load_sound("sounds/game/turn_to_blue.mp3")
-       self.eating_fruit_sound = pr.load_sound("sounds/game/eating_fruit.mp3")
+
        
        self.settings = load_settings()
        self.sound_volume = self.settings["SOUND_VOLUME"]
@@ -52,7 +52,7 @@ class Pacman():
        pr.set_sound_volume(self.eating_corn_sound, self.sound_volume)
        pr.set_sound_volume(self.turn_to_blue_sound, self.sound_volume)
        pr.set_sound_volume(self.eating_ghost_sound, self.sound_volume)
-       pr.set_sound_volume(self.eating_fruit_sound, self.sound_volume)
+
 
        self.speed = 1  # скорость пакмана
        self.pos_x = x * cell_size  # абсолютное положение по горизонтали

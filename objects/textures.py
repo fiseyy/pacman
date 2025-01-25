@@ -76,7 +76,8 @@ class Textures:
                 "death_10": pr.load_texture_from_image(pr.load_image("images/pacman/death/pacman_death_10.png")),
                 "death_11": pr.load_texture_from_image(pr.load_image("images/pacman/death/pacman_death_11.png")),
             },
-            "life": pr.load_texture_from_image(pr.load_image("images/heart.png"))
+            "life": pr.load_texture_from_image(pr.load_image("images/heart.png")),
+            "cherry": pr.load_texture_from_image(pr.load_image("images/cherry.png"))
        }
 
    def get_texture(self, texture_name):
