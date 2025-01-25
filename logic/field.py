@@ -27,3 +27,7 @@ class Field:
         # print([row[:] for row in self.field])
         # return [row[:] for row in self.field]  <---- для этого будет field.to_array()[y][x]
         return [list(column) for column in zip(*self.field)] # <---- для этого будет field.to_array()[x][y]
+
+    def update_field(self, new_field):
+        """Обновляет игровое поле."""
+        self.field_array = new_field

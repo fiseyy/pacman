@@ -56,6 +56,7 @@ class Pacman():
        self.animation_time = 0  # Время анимации
        self.animation_frame = 0  # Текущий кадр анимации
        self.animation_duration = 0.3  # Длительность одного кадра анимации (в секундах)
+       self.collision = PacmanCollision(self.pos_cell_x, self.pos_cell_y, self.field)
 
    def draw(self):
        """
@@ -100,6 +101,7 @@ class Pacman():
        Передвигает пакмана в 4х направлениях.
        """
        # print(f"future {self.future_direction}, direction {self.movement.direction}") # DEBUG
+
        if self.future_direction:
            if self.movement.can_move(self.future_direction) and self.pos_x % self.__cell_size == 0 and self.pos_y % self.__cell_size == 0 and not self.future_direction == self.movement.reverse_direction(self.movement.direction):
                self.movement.set_direction(self.future_direction)
@@ -295,3 +297,23 @@ class PacmanMovement:
            tuple: Обратное направление.
        """
        return (-direction[0], -direction[1])
+   
+class PacmanCollision:
+    def __init__(self, pos_cell_x, pos_cell_y, field):
+        self.pos_cell_x = pos_cell_x
+        self.pos_cell_y = pos_cell_y
+        self.field = field
+        
+    
+    def seed_collision(self):
+        if self.field.to_array()[self.pos_cell_x][self.pos_cell_y] == "." or self.field.to_array()[self.pos_cell_x][self.pos_cell_y] == "S" :
+            return True
+        else:
+            return False
+    
+    def which_collision(self):
+        if self.field.to_array()[self.pos_cell_x][self.pos_cell_y] == ".":
+            print("съел зерно")
+            
+        elif self.field.to_array()[self.pos_cell_x][self.pos_cell_y] == "S":
+            print("съел большое зерно")

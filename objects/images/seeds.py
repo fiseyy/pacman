@@ -1,6 +1,5 @@
 import pyray as pr
 
-
 class Seed:
     """
     Класс малого зерна
@@ -18,10 +17,16 @@ class Seed:
         self.radius = radius
         self.texture = texture
         self.cell_size = cell_size
+        self.hidden = False
+
     def draw(self):
-        pr.draw_texture(self.texture, self.x, self.y, pr.WHITE)
-    def collisions(self, pacman: pr.Rectangle):
-        # TODO: Добавить проверку на коллизию с Pacman
-        pass
+        if not self.hidden:
+            pr.draw_texture(self.texture, self.x, self.y, pr.WHITE)
+            
+    def collisions(self, pacman):
+        if pacman.pos_cell_x == self.x and pacman.pos_cell_y == self.y:
+            self.hide()
+            pacman.collision.which_collision()
+            
     def hide(self):
-        pass
+        self.hidden = True
