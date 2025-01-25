@@ -1,6 +1,7 @@
 from scenes.base import SceneBase, draw_button
 from settings import BLACK_BACKGROUND, WHITE_TEXT, RED_TEXT, FONT_SIZE, SCREEN_WIDTH, SCREEN_HEIGHT, font, BUTTON_WIDTH, BUTTON_HEIGHT, load_settings
 import pyray as pr
+from logic.records import Records, Record
 class GameOverScene(SceneBase):
     """
     Класс для сцены паузы.
@@ -23,7 +24,14 @@ class GameOverScene(SceneBase):
        Входит в сцену паузы.
         """
         self.score = score
+        record = Record(self.score)
+        records = Records()
+        records.load_records()
+        records.add_record(record)
+        records.save_records()
+        
         print("Entering Game Over Scene")
+
     def button_clicked(self, new_scene):
         pr.play_sound(self.button_click_sound)
         pr.wait_time(0.5)
