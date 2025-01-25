@@ -33,3 +33,7 @@ class LifeCounter:
         
         """
         return self.lives
+    def isAlive(self)->bool:
+        if self.lives==0:
+            return False
+        return True 

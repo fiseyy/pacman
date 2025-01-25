@@ -1,8 +1,10 @@
 from scenes.base import SceneBase, draw_button
 import pyray as pr
+from logic.life import LifeCounter
 from settings import BLACK_BACKGROUND, font, SCREEN_HEIGHT, SCREEN_WIDTH, FONT_SIZE, WHITE_TEXT, BUTTON_HEIGHT, BUTTON_WIDTH, sound, save_settings
 MUSIC_VOLUME = sound["MUSIC_VOLUME"]
 SOUND_VOLUME = sound["SOUND_VOLUME"]
+LifeCounter_obj = LifeCounter()
 class MusicChangerButton():
     def __init__(self):
         self.music_volume = MUSIC_VOLUME

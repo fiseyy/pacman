@@ -1,5 +1,5 @@
 import pyray as pr
-
+from logic.life import LifeCounter
 class DrawHearts:
     def __init__(self, position, texture):
         self.position = position
@@ -12,7 +12,7 @@ class DrawHearts:
             current_position[0] += 30  # Сдвигаем позицию для следующего сердца
 
 class LifeDrawer(DrawHearts):
-    def __init__(self, x, y, texture):
+    def __init__(self, x, y, texture,LifeCounter_obj):
         """
         Инициализирует объект для отрисовки количества жизней.
         
@@ -20,10 +20,12 @@ class LifeDrawer(DrawHearts):
         :param y: Координата y для отрисовки.
         :param score_counter: Объект класса ScoreCounter, содержащий количество жизней.
         """
+        self.LifeCounter_obj=LifeCounter_obj
         self.x = x
         self.y = y
         self.texture = texture
+        self.life_counts=LifeCounter_obj.get_lives()
         super().__init__([self.x,self.y],self.texture)
-    def draw(self,life_counts):
+    def draw(self):
         """Отрисовывает количество жизней на экране, используя сигнатуру из RecalculableText."""
-        super().draw(life_counts)
+        super().draw(self.life_counts)
