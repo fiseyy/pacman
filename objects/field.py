@@ -56,6 +56,5 @@ class FieldDrawer:
                         seed.draw()
                 elif cell == 'T':
                     pr.draw_rectangle(x_to_center + x * self.cell_size, y_to_center + y * self.cell_size, self.cell_size, self.cell_size, pr.YELLOW)
-    def collision_logic_update(self,pacman):
-        for seed in self.seeds:
-            seed.collisions(pacman)
+
+    

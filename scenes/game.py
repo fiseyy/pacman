@@ -61,4 +61,8 @@ class GameScene(SceneBase):
         self.cherry.logic()
         self.pacman.define_direction()
         self.pacman.move()
-        self.field_drawer.collision_logic_update(self.pacman)
+        for seed in self.field_drawer.seeds:
+            seed.collisions(self.pacman, self.score_counter)
+        
+    
+        

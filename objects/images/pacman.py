@@ -303,17 +303,17 @@ class PacmanCollision:
         self.pos_cell_x = pos_cell_x
         self.pos_cell_y = pos_cell_y
         self.field = field
-        
     
     def seed_collision(self):
-        if self.field.to_array()[self.pos_cell_x][self.pos_cell_y] == "." or self.field.to_array()[self.pos_cell_x][self.pos_cell_y] == "S" :
+        if self.field.to_array()[self.pos_cell_x][self.pos_cell_y] == "." or self.field.to_array()[self.pos_cell_x][self.pos_cell_y] == "S":
             return True
-        else:
-            return False
-    
+        return False
+            
     def which_collision(self):
         if self.field.to_array()[self.pos_cell_x][self.pos_cell_y] == ".":
             print("съел зерно")
             
         elif self.field.to_array()[self.pos_cell_x][self.pos_cell_y] == "S":
             print("съел большое зерно")
+            
+    

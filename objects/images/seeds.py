@@ -1,5 +1,6 @@
 import pyray as pr
 from objects.images.pacman import Pacman
+from logic.score import ScoreCounter
 class Seed:
     """
     Класс малого зерна
@@ -25,10 +26,11 @@ class Seed:
         if not self.hidden:
             pr.draw_texture(self.texture, self.x, self.y, pr.WHITE)
             
-    def collisions(self,pacman: Pacman):
+    def collisions(self,pacman: Pacman, score_counter: ScoreCounter):
         if pacman.pos_cell_x == self.pos_cell_x and pacman.pos_cell_y == self.pos_cell_y:
             self.hide()
             pacman.collision.which_collision()
+            score_counter.add(self.weight)
             
     def hide(self):
         self.hidden = True
