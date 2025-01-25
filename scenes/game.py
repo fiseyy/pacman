@@ -23,7 +23,7 @@ class GameScene(SceneBase):
         self.textures = Textures()
         self.field = Field("objects/maps/field.txt")
         self.pacman = Pacman(1,1,cell_size, self.textures.get_texture("pacman"),self.field)
-        self.field_drawer = FieldDrawer(self.field,cell_size, pacman=self.pacman)
+        self.field_drawer = FieldDrawer(self.field,cell_size)
         self.inky_ghost = InkyGhost(x=1, y=1,cell_size=cell_size, field=self.field,textures=self.textures)
         self.cherry=Cherry(1,2,5,cell_size)
         self.score_counter = ScoreCounter(initial_score=0)
@@ -61,3 +61,4 @@ class GameScene(SceneBase):
         self.cherry.logic()
         self.pacman.define_direction()
         self.pacman.move()
+        self.field_drawer.collision_logic_update(self.pacman)
