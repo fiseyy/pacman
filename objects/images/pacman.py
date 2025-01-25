@@ -311,9 +311,8 @@ class PacmanCollision:
             
     def which_collision(self):
         if self.field.to_array()[self.pos_cell_x][self.pos_cell_y] == ".":
-            print("съел зерно")
-            
+            print("DEBUG: съел зерно")
+
         elif self.field.to_array()[self.pos_cell_x][self.pos_cell_y] == "S":
-            print("съел большое зерно")
-            
+            print("DEBUG: съел большое зерно")
     
