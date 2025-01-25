@@ -1,7 +1,7 @@
 from pyray import get_font_default
 import json
 SCREEN_WIDTH = 800  # Ширина окна
-SCREEN_HEIGHT = 600  # Высота окна
+SCREEN_HEIGHT = 560 # Высота окна
 YELLOW_BACKGROUND = (255, 255, 0, 255)  # Желтый фон
 BLACK_BACKGROUND = (0, 0, 0, 255)  # Черный фон
 WHITE_TEXT = (255, 255, 255, 255)  # Белый текст

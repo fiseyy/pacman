@@ -17,16 +17,12 @@ class GameState:
 
         # Отложенный импорт для избежания циклических зависимостей
         if new_scene == "menu":
-            from scenes.menu import MenuScene
             self.current_scene = MenuScene(self)
         elif new_scene == "game":
-            from scenes.game import GameScene
-            self.current_scene = GameScene(15)
+            self.current_scene = GameScene(18)
         elif new_scene == "pause":
-            from scenes.pause import PauseScene
             self.current_scene = PauseScene()
         elif new_scene == "records":
-            from scenes.records import RecordsScene
             self.current_scene = RecordsScene(self)
         elif new_scene == "settings":
             self.current_scene = SettingsScene(self)
