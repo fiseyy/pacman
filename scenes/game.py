@@ -245,6 +245,7 @@ class GameScene(SceneBase):
         pr.set_sound_volume(self.pacman.eating_corn_sound,0)
         pr.set_sound_volume(self.pacman.turn_to_blue_sound,0)
         pr.set_sound_volume(self.game_over_sound, 0)
+        pr.set_sound_volume(self.start_game_sound, 0)
         # pr.unload_sound(self.ghosts_moving_sound)
         # pr.unload_sound(self.eating_ghost_sound)
         # pr.unload_sound(self.eating_fruit_sound)
