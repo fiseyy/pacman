@@ -5,11 +5,12 @@ from scenes.game import GameScene
 from scenes.records import RecordsScene
 from scenes.settings import SettingsScene
 from scenes.game_over import GameOverScene
-from settings import CELL_SIZE
+from settings import CELL_SIZE, SCREEN_HEIGHT, SCREEN_WIDTH
 import pyray as pr
 # scene_manager.py
 class GameState:
     def __init__(self):
+        pr.init_window(SCREEN_WIDTH, SCREEN_HEIGHT, "PAC-MAN Game")  # Инициализация окна
         pr.init_audio_device()
         self.current_scene = None  # Изначально нет текущей сцены
         self.change_scene("menu")  # Переход в меню
