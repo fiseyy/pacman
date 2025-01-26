@@ -37,6 +37,28 @@ class GameState:
         self.current_scene.exit()
         self.current_scene = GameOverScene(self)
         self.current_scene.enter(score)
+    def pause_game(self):
+        if isinstance(self.current_scene, GameScene):
+            self.saved_pacman = self.current_scene.pacman
+            self.saved_ghosts = [self.current_scene.blinky_ghost,
+                                 self.current_scene.clyde_ghost,
+                                 self.current_scene.pinky_ghost,
+                                 self.current_scene.inky_ghost]
+            self.life_counter = self.current_scene.life_counter
+            self.score_counter = self.current_scene.score_counter
+            self.field_drawer = self.current_scene.field_drawer
+            self.change_scene("pause") # Переход в сцену паузы
+        elif isinstance(state.current_scene, PauseScene):
+            self.current_scene.exit()
+            self.current_scene = GameScene(self,CELL_SIZE, self.life_counter, self.score_counter)
+            self.current_scene.pacman = self.saved_pacman
+            self.current_scene.pacman.unpause()
+            self.current_scene.field_drawer = self.field_drawer
+            self.current_scene.blinky_ghost = self.saved_ghosts[0]
+            self.current_scene.clyde_ghost = self.saved_ghosts[1]
+            self.current_scene.pinky_ghost = self.saved_ghosts[2]
+            self.current_scene.inky_ghost = self.saved_ghosts[3]
+
 # Создаем объект состояния игры
 state = GameState()
       
@@ -45,10 +67,7 @@ def handle_key_presses() -> None:
     Обработка нажатий клавиш для управления сценами.
     """
     if pr.is_key_pressed(pr.KEY_P):
-        if isinstance(state.current_scene, GameScene):
-            state.change_scene("pause") # Переход в сцену паузы
-        elif isinstance(state.current_scene, PauseScene):
-            state.change_scene("game")  # Переход в меню
+        state.pause_game()
     if pr.is_key_pressed(pr.KEY_Q):
         if isinstance(state.current_scene, GameScene):
             state.change_scene("menu")

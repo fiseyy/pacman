@@ -230,18 +230,24 @@ class GameScene(SceneBase):
             
             if self.death_time + 3 < pr.get_time():
                 if self.life_counter.get_lives() == 0:
-                    # TODO: здесь сохранять результаты в таблицу рекордов
-                    # self.state.restart_game(0,0)
                     self.state.game_over(self.score_counter.get_score())
                 else:
-                    # self.pacman_death = False
-                    # self.pacman.alive()
-                    # self.field.ghost_spawners.reset()
-                    # self.clyde_ghost.restart()
-                    # self.inky_ghost.restart()
                     self.state.restart_game(self.life_counter, self.score_counter)
             else:
                 self.pacman.death_animation_drawer()
         if self.field_drawer.get_seeds() == []:
             # Level completed
             self.state.restart_game(self.life_counter, self.score_counter)
+    def exit(self):
+        pr.set_sound_volume(self.ghosts_moving_sound,0)
+        pr.set_sound_volume(self.eating_ghost_sound,0)
+        pr.set_sound_volume(self.eating_fruit_sound,0)
+        pr.set_sound_volume(self.pacman.eating_corn_sound,0)
+        pr.set_sound_volume(self.pacman.turn_to_blue_sound,0)
+        pr.set_sound_volume(self.game_over_sound, 0)
+        # pr.unload_sound(self.ghosts_moving_sound)
+        # pr.unload_sound(self.eating_ghost_sound)
+        # pr.unload_sound(self.eating_fruit_sound)
+        # pr.unload_sound(self.pacman.eating_corn_sound)
+        # pr.unload_sound(self.pacman.turn_to_blue_sound)
+        # pr.unload_sound(self.game_over_sound)

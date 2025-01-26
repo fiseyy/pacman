@@ -73,7 +73,16 @@ class Pacman():
        self.turn_to_blue = False
        self.turn_to_blue_start = None
        self.turn_to_blue_end = None
+   def unpause(self):
+        self.eating_corn_sound = pr.load_sound("sounds/game/eating_corn.mp3")
+        self.turn_to_blue_sound = pr.load_sound("sounds/game/turn_to_blue.mp3")
 
+       
+        self.settings = load_settings()
+        self.sound_volume = self.settings["SOUND_VOLUME"]
+
+        pr.set_sound_volume(self.eating_corn_sound, self.sound_volume)
+        pr.set_sound_volume(self.turn_to_blue_sound, self.sound_volume)
    def draw(self):
        """
        Рисует пакмана.
